@@ -13,12 +13,12 @@ const Logo = ({ className }: { className?: string }) => {
       >
         <path
           d="M12 2L2 7V17C2 18.1046 2.89543 19 4 19H20C21.1046 19 22 18.1046 22 17V7L12 2Z"
-          fill="currentColor"
+          fill="hsl(var(--primary))"
           fillOpacity="0.2"
         />
         <path
           d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
-          stroke="currentColor"
+          stroke="hsl(var(--primary))"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -26,7 +26,7 @@ const Logo = ({ className }: { className?: string }) => {
         />
         <path
           d="M12 2L2 7V17C2 18.1046 2.89543 19 4 19H20C21.1046 19 22 18.1046 22 17V7L12 2Z"
-          stroke="currentColor"
+          stroke="hsl(var(--primary))"
           strokeWidth="1.5"
           strokeLinecap="round"
           strokeLinejoin="round"
