@@ -21,12 +21,13 @@ const DocumentAuthenticityAnalysisInputSchema = z.object({
 export type DocumentAuthenticityAnalysisInput = z.infer<typeof DocumentAuthenticityAnalysisInputSchema>;
 
 const DocumentAuthenticityAnalysisOutputSchema = z.object({
+  documentType: z.string().describe("The type of the document (e.g., Driver's License, Passport)."),
   authenticity: z.object({
     isReal: z.boolean().describe('Whether the document is likely real or fake.'),
     confidenceScore: z
       .number()
       .describe('A score between 0 and 1 indicating the confidence in the authenticity.'),
-    analysisDetails: z.string().describe('The details of the analysis of the document.'),
+    analysisDetails: z.string().describe('A detailed analysis of the document, including checks for holograms, watermarks, and other security features.'),
   }),
 });
 export type DocumentAuthenticityAnalysisOutput = z.infer<typeof DocumentAuthenticityAnalysisOutputSchema>;
@@ -41,15 +42,22 @@ const prompt = ai.definePrompt({
   name: 'documentAuthenticityAnalysisPrompt',
   input: {schema: DocumentAuthenticityAnalysisInputSchema},
   output: {schema: DocumentAuthenticityAnalysisOutputSchema},
-  prompt: `You are an expert in document authenticity verification.
+  prompt: `You are an expert in document authenticity verification for government-issued IDs.
 
-You will analyze the provided government-issued ID document image to determine its authenticity.
+  Your task is to analyze the provided image of an ID document and determine its authenticity.
 
-Analyze the image and provide a confidence score (between 0 and 1) indicating the likelihood of the document being real.
+  1.  **Identify the Document Type**: First, identify the type of document (e.g., Driver's License, Passport, National ID).
+  2.  **Analyze Authenticity**: Carefully examine the image for security features and potential signs of tampering. Check for:
+      - Holograms: Look for reflections and authenticity seals.
+      - Watermarks: Check for faint, embedded images or patterns.
+      - Microprinting: Look for tiny, hard-to-replicate text.
+      - Photo Quality: Assess if the photo seems legitimate or has been replaced.
+      - Font Consistency: Ensure all text uses consistent and official fonts.
+      - Overall Layout: Compare the layout to standard templates for that document type.
+  3.  **Provide a Confidence Score**: Based on your analysis, provide a confidence score from 0.0 to 1.0 indicating how likely the document is to be authentic.
+  4.  **Write Analysis Details**: Summarize your findings in a brief report. Mention the specific features you checked and whether they passed or failed.
 
-Also include analysis details of the document.
-
-Photo: {{media url=photoDataUri}}`,
+  Photo: {{media url=photoDataUri}}`,
 });
 
 const documentAuthenticityAnalysisFlow = ai.defineFlow(

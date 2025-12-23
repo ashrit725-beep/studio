@@ -44,13 +44,13 @@ const VerificationResult: React.FC<VerificationResultProps> = ({ result, isLoadi
         </CardHeader>
         <CardContent className="flex flex-1 flex-col items-center justify-center">
           <FileQuestion className="h-16 w-16 text-muted-foreground" />
-          <p className="mt-4 text-muted-foreground">Upload a document to begin</p>
+          <p className="mt-4 text-muted-foreground">Upload or capture a document to begin</p>
         </CardContent>
       </Card>
     );
   }
 
-  const { authenticity } = result;
+  const { documentType, authenticity } = result;
   const confidencePercent = Math.round(authenticity.confidenceScore * 100);
   const isReal = authenticity.isReal;
 
@@ -61,16 +61,22 @@ const VerificationResult: React.FC<VerificationResultProps> = ({ result, isLoadi
         <CardDescription>Detailed breakdown of the document verification.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="flex flex-col items-center gap-2 rounded-lg border p-4">
-          <h3 className="text-lg font-semibold">Overall Authenticity</h3>
-          <Badge variant={isReal ? "default" : "destructive"} className="text-base">
-            {isReal ? (
-              <CheckCircle className="mr-2 h-4 w-4" />
-            ) : (
-              <XCircle className="mr-2 h-4 w-4" />
-            )}
-            {isReal ? "Likely Authentic" : "Potentially Altered"}
-          </Badge>
+        <div className="flex flex-col items-center gap-3 rounded-lg border p-4">
+            <div className="space-y-1 text-center">
+                <h3 className="text-lg font-semibold">Document Type</h3>
+                <p className="text-muted-foreground">{documentType}</p>
+            </div>
+            <div className="space-y-1 text-center">
+                <h3 className="text-lg font-semibold">Overall Authenticity</h3>
+                <Badge variant={isReal ? "default" : "destructive"} className="text-base">
+                    {isReal ? (
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    ) : (
+                    <XCircle className="mr-2 h-4 w-4" />
+                    )}
+                    {isReal ? "Likely Authentic" : "Potentially Altered"}
+                </Badge>
+            </div>
         </div>
 
         <div className="space-y-2">

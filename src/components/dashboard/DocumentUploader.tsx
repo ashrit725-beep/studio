@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import { Upload, X, Loader2, Camera, Circle } from "lucide-react";
+import { Upload, X, Loader2, Camera, ScanLine } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface DocumentUploaderProps {
-  setAnalysisResult: (result: DocumentAuthenticityAnalysisOutput | null) => void;
+  setAnalysisResult: (result: DocumentAuthenticityAnalysisOutput) => void;
   setIsLoading: (loading: boolean) => void;
   isLoading: boolean;
 }
@@ -22,35 +22,64 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
   const [file, setFile] = useState<(File & { preview: string }) | null>(null);
   const { toast } = useToast();
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const getCameraPermission = async () => {
-    if (hasCameraPermission !== null) return;
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      setHasCameraPermission(true);
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
+    if (hasCameraPermission === null) {
+      try {
+        await navigator.mediaDevices.getUserMedia({ video: true });
+        setHasCameraPermission(true);
+      } catch (error) {
+        console.error("Error accessing camera:", error);
+        setHasCameraPermission(false);
+        toast({
+          variant: "destructive",
+          title: "Camera Access Denied",
+          description: "Please enable camera permissions in your browser settings.",
+        });
       }
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      setHasCameraPermission(false);
-      toast({
-        variant: "destructive",
-        title: "Camera Access Denied",
-        description: "Please enable camera permissions in your browser settings.",
-      });
+    }
+    if (hasCameraPermission !== false) {
+      setIsCameraActive(true);
     }
   };
+  
+  useEffect(() => {
+    let stream: MediaStream | null = null;
+    if (isCameraActive && hasCameraPermission) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((s) => {
+          stream = s;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch(err => {
+            console.error("Error starting camera stream:", err);
+            setHasCameraPermission(false);
+            setIsCameraActive(false);
+        });
+    }
+  
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [isCameraActive, hasCameraPermission]);
+
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles?.length) {
       const selectedFile = acceptedFiles[0];
       setFile(Object.assign(selectedFile, { preview: URL.createObjectURL(selectedFile) }));
-      setAnalysisResult(null);
     }
-  }, [setAnalysisResult]);
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -58,6 +87,25 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
     maxFiles: 1,
   });
 
+  const analyzeImage = async (base64: string) => {
+    setIsLoading(true);
+    const response = await verifyDocument(base64);
+    if (response.success && response.data) {
+      setAnalysisResult(response.data);
+      toast({
+        title: "Analysis Complete",
+        description: `Document identified as ${response.data.documentType}.`,
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Analysis Failed",
+        description: response.error || "An unknown error occurred.",
+      });
+    }
+    setIsLoading(false);
+  };
+  
   const handleAnalyze = async () => {
     if (!file) {
       toast({
@@ -67,35 +115,13 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
       });
       return;
     }
-    setIsLoading(true);
+    
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      const response = await verifyDocument(base64);
-      if (response.success && response.data) {
-        setAnalysisResult(response.data);
-        toast({
-          title: "Analysis Complete",
-          description: "The document has been successfully analyzed.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Analysis Failed",
-          description: response.error || "An unknown error occurred.",
-        });
-        setAnalysisResult(null);
-      }
-      setIsLoading(false);
-    };
+    reader.onload = () => analyzeImage(reader.result as string);
     reader.onerror = (error) => {
       console.error("Error reading file:", error);
-      toast({
-        variant: "destructive",
-        title: "File Read Error",
-        description: "Could not read the selected file.",
-      });
+      toast({ variant: "destructive", title: "File Read Error", description: "Could not read the selected file." });
       setIsLoading(false);
     };
   };
@@ -105,7 +131,6 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
       URL.revokeObjectURL(file.preview);
     }
     setFile(null);
-    setAnalysisResult(null);
   };
 
   const captureImage = () => {
@@ -120,32 +145,24 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
         canvas.toBlob(blob => {
           if (blob) {
             const capturedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
-            setFile(Object.assign(capturedFile, { preview: URL.createObjectURL(capturedFile) }));
-            setAnalysisResult(null);
+            const previewUrl = URL.createObjectURL(capturedFile);
+            setFile(Object.assign(capturedFile, { preview: previewUrl }));
+            setIsCameraActive(false); // Turn off camera after capture
+            analyzeImage(canvas.toDataURL('image/jpeg'));
           }
         }, 'image/jpeg');
       }
     }
   };
 
-  useEffect(() => {
-    return () => {
-        // Cleanup function to stop video stream when component unmounts
-        if (videoRef.current && videoRef.current.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach(track => track.stop());
-        }
-    };
-  }, []);
-
   return (
-    <Card>
+    <Card className="h-full">
       <CardHeader>
         <CardTitle>Verify Document</CardTitle>
         <CardDescription>Upload or capture a government-issued ID to check its authenticity.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Tabs defaultValue="upload">
+        <Tabs defaultValue="upload" onValueChange={() => setIsCameraActive(false)}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="upload">
               <Upload className="mr-2 h-4 w-4" /> Upload File
@@ -177,30 +194,39 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
                     </AlertDescription>
                 </Alert>
               )}
-              <video ref={videoRef} className="w-full aspect-video rounded-md bg-muted" autoPlay muted playsInline />
+               <div className="relative w-full aspect-video rounded-md bg-muted overflow-hidden">
+                <video ref={videoRef} className="w-full h-full object-cover" autoPlay muted playsInline />
+                {isCameraActive && <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <ScanLine className="h-2/3 w-2/3 text-white/30 animate-pulse" />
+                </div>}
+              </div>
+
               <canvas ref={canvasRef} className="hidden" />
-              <Button onClick={captureImage} disabled={!hasCameraPermission || isLoading} size="icon" className="h-16 w-16 rounded-full absolute bottom-4">
-                <Circle className="h-12 w-12 text-white fill-white" />
+              <Button onClick={captureImage} disabled={!isCameraActive || isLoading} size="lg" className="w-full">
+                <Camera className="mr-2 h-5 w-5" />
+                Capture & Analyze
               </Button>
             </div>
           </TabsContent>
         </Tabs>
 
         {file && (
-          <div className="flex items-center justify-between rounded-lg border p-2">
-            <div className="flex items-center gap-2">
-                <Image src={file.preview} alt="Preview" width={40} height={30} className="rounded-md object-cover"/>
-                <p className="truncate text-sm">{file.name}</p>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between rounded-lg border p-2">
+              <div className="flex items-center gap-2 overflow-hidden">
+                  <Image src={file.preview} alt="Preview" width={40} height={30} className="rounded-md object-cover h-10 w-12"/>
+                  <p className="truncate text-sm font-medium">{file.name}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={removeFile}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
-            <Button variant="ghost" size="icon" onClick={removeFile}>
-              <X className="h-4 w-4" />
+            <Button onClick={handleAnalyze} disabled={isLoading} className="w-full">
+              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isLoading ? "Analyzing..." : "Analyze Uploaded Document"}
             </Button>
           </div>
         )}
-        <Button onClick={handleAnalyze} disabled={!file || isLoading} className="w-full">
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          {isLoading ? "Analyzing..." : "Analyze Document"}
-        </Button>
       </CardContent>
     </Card>
   );
