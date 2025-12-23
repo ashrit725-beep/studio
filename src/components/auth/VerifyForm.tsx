@@ -94,7 +94,7 @@ export default function VerifyForm() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Verifying..." : "Verify"}
+              {isLoading ? "Verifying..." : "Verify Account"}
             </Button>
           </form>
         </Form>

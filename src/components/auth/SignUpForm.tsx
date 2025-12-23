@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth, useFirestore, setDocumentNonBlocking } from "@/firebase";
+import { sendVerificationCode } from "@/actions/auth";
+
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -53,6 +55,8 @@ export default function SignUpForm() {
     setIsLoading(true);
     
     try {
+      // We are creating the user but not signing them in. The user will be signed in
+      // after they verify their email. For now, Firebase will keep track of this user.
       const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
       const user = userCredential.user;
       
@@ -69,13 +73,23 @@ export default function SignUpForm() {
       const userDocRef = doc(firestore, "users", user.uid);
       setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
 
-      await sendEmailVerification(user);
+      // Send verification code via server action
+      const sendCodeResult = await sendVerificationCode({ email: values.email });
 
-      toast({
-        title: "Verification Email Sent",
-        description: "Please check your email to verify your account.",
-      });
-      router.push(`/verify?email=${encodeURIComponent(values.email)}`);
+      if (sendCodeResult.success) {
+        toast({
+          title: "Verification Code Sent",
+          description: "Please check your email for a 6-digit code.",
+        });
+        router.push(`/verify?email=${encodeURIComponent(values.email)}`);
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Failed to Send Code",
+          description: sendCodeResult.error,
+        });
+        setIsLoading(false);
+      }
 
     } catch (error: any) {
       toast({

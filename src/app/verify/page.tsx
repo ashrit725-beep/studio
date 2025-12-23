@@ -1,8 +1,7 @@
 import Logo from "@/components/common/Logo";
+import VerifyForm from "@/components/auth/VerifyForm";
 import { Suspense } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 
 function VerifyContent() {
   return (
@@ -11,23 +10,12 @@ function VerifyContent() {
         <div className="mb-8 flex justify-center">
           <Logo />
         </div>
-        <Card>
-            <CardHeader>
-                <CardTitle>Check your email</CardTitle>
-                <CardDescription>
-                    We've sent a verification link to your email address. Please click the link to verify your account and then log in.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <Button asChild className="w-full">
-                    <Link href="/login">Go to Login</Link>
-                </Button>
-            </CardContent>
-        </Card>
+        <VerifyForm />
       </div>
     </div>
   );
 }
+
 
 export default function VerifyPage() {
     return (
