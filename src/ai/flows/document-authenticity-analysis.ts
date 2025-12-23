@@ -42,20 +42,29 @@ const prompt = ai.definePrompt({
   name: 'documentAuthenticityAnalysisPrompt',
   input: {schema: DocumentAuthenticityAnalysisInputSchema},
   output: {schema: DocumentAuthenticityAnalysisOutputSchema},
-  prompt: `You are an expert in document authenticity verification for government-issued IDs.
+  prompt: `You are an expert system in document authenticity verification for government-issued IDs, similar to Google Document AI. Your task is to meticulously analyze the provided image of an ID document and determine its authenticity with a high degree of accuracy.
 
-  Your task is to analyze the provided image of an ID document and determine its authenticity.
+  Follow these steps precisely:
 
-  1.  **Identify the Document Type**: First, identify the type of document (e.g., Driver's License, Passport, National ID).
-  2.  **Analyze Authenticity**: Carefully examine the image for security features and potential signs of tampering. Check for:
-      - Holograms: Look for reflections and authenticity seals.
-      - Watermarks: Check for faint, embedded images or patterns.
-      - Microprinting: Look for tiny, hard-to-replicate text.
-      - Photo Quality: Assess if the photo seems legitimate or has been replaced.
-      - Font Consistency: Ensure all text uses consistent and official fonts.
-      - Overall Layout: Compare the layout to standard templates for that document type.
-  3.  **Provide a Confidence Score**: Based on your analysis, provide a confidence score from 0.0 to 1.0 indicating how likely the document is to be authentic.
-  4.  **Write Analysis Details**: Summarize your findings in a brief report. Mention the specific features you checked and whether they passed or failed.
+  1.  **Identify Document Type**: First, identify the specific type of document (e.g., California Driver's License, US Passport, etc.). If you cannot determine the type, state "Unknown Document Type".
+
+  2.  **Analyze Authenticity**: Carefully examine the image for standard security features and common signs of forgery or tampering. Your analysis MUST check for:
+      - **Holograms**: Look for holographic overlays, seals, or images. Note their presence, appearance, and if they reflect light as expected.
+      - **Watermarks**: Check for faint, embedded images or patterns that are part of the document paper or material.
+      - **Microprinting**: Identify any areas that should contain micro-text and assess if it appears clear and legible under magnification, or if it's blurred or unreadable.
+      - **Photo Quality & Integration**: Assess if the portrait photo seems legitimate, properly integrated into the document, or if it looks like it has been replaced or digitally altered. Check for consistent lighting and background.
+      - **Font Consistency & Quality**: Ensure all text uses official, consistent fonts. Look for variations in font type, size, or alignment that could indicate alteration.
+      - **Overall Layout & Spacing**: Compare the layout, spacing of elements, and borders to known templates for that specific document type. Note any deviations.
+
+  3.  **Determine Authenticity & Confidence Score**:
+      - Based on the presence and quality of the security features, classify the document by setting the \`isReal\` boolean field to \`true\` for likely authentic or \`false\` for likely fake/altered.
+      - Provide a \`confidenceScore\` from 0.0 (no confidence it's real) to 1.0 (very high confidence it's real). A real document should have a score above 0.8. A document with several missing or flawed features should have a score below 0.5.
+
+  4.  **Write Detailed Analysis**:
+      - Summarize your findings in the \`analysisDetails\` field.
+      - Your summary must be a step-by-step report of the features you checked. For each feature (Hologram, Watermark, etc.), state whether it 'Passed', 'Failed', or was 'Not Applicable'/'Not Visible', and provide a brief justification.
+
+  Begin analysis on the provided photo.
 
   Photo: {{media url=photoDataUri}}`,
 });
