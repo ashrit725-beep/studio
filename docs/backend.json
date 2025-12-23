@@ -1,0 +1,247 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the AI-NaMo application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "email": {
+          "type": "string",
+          "description": "User's email address.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "User's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "User's last name."
+        },
+        "registrationDate": {
+          "type": "string",
+          "description": "Date and time the user registered.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "firstName",
+        "lastName",
+        "registrationDate"
+      ]
+    },
+    "VerificationRequest": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "VerificationRequest",
+      "type": "object",
+      "description": "Represents a single verification request made by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the VerificationRequest entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N VerificationRequest)"
+        },
+        "documentType": {
+          "type": "string",
+          "description": "Type of government-issued document (e.g., Driver's License, Passport)."
+        },
+        "uploadTimestamp": {
+          "type": "string",
+          "description": "Timestamp of when the document was uploaded.",
+          "format": "date-time"
+        },
+        "verificationStatus": {
+          "type": "string",
+          "description": "Status of the verification process (e.g., pending, processing, completed, failed)."
+        },
+        "authenticityScore": {
+          "type": "number",
+          "description": "AI-powered authenticity score (0-100)."
+        },
+        "isReal": {
+          "type": "boolean",
+          "description": "Classification of the document as real or fake."
+        },
+        "documentAiResponse": {
+          "type": "string",
+          "description": "The response from Google Cloud Document AI for the verification request."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "documentType",
+        "uploadTimestamp",
+        "verificationStatus",
+        "authenticityScore",
+        "isReal",
+        "documentAiResponse"
+      ]
+    },
+    "UsageStatistic": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UsageStatistic",
+      "type": "object",
+      "description": "Represents a usage statistic record.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UsageStatistic entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N UsageStatistic)"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the usage statistic.",
+          "format": "date-time"
+        },
+        "verificationCount": {
+          "type": "number",
+          "description": "Number of verification requests made on this date."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "date",
+        "verificationCount"
+      ]
+    },
+    "ChatbotSession": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "ChatbotSession",
+      "type": "object",
+      "description": "Represents a chatbot session with a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the ChatbotSession entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to User. (Relationship: User 1:N ChatbotSession)"
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Timestamp when the chatbot session started.",
+          "format": "date-time"
+        },
+        "endTime": {
+          "type": "string",
+          "description": "Timestamp when the chatbot session ended.",
+          "format": "date-time"
+        },
+        "transcript": {
+          "type": "string",
+          "description": "Full transcript of the conversation with the chatbot."
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "startTime",
+        "endTime",
+        "transcript"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. Top-level collection enabling path-based ownership for subcollections.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/verificationRequests/{verificationRequestId}",
+        "definition": {
+          "entityName": "VerificationRequest",
+          "schema": {
+            "$ref": "#/backend/entities/VerificationRequest"
+          },
+          "description": "Stores verification requests associated with a specific user. Enables path-based ownership. Contains detailed results from the verification process.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "verificationRequestId",
+              "description": "The unique identifier for the verification request."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/usageStatistics/{usageStatisticId}",
+        "definition": {
+          "entityName": "UsageStatistic",
+          "schema": {
+            "$ref": "#/backend/entities/UsageStatistic"
+          },
+          "description": "Stores usage statistics for a specific user. Enables path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "usageStatisticId",
+              "description": "The unique identifier for the usage statistic record."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/chatbotSessions/{chatbotSessionId}",
+        "definition": {
+          "entityName": "ChatbotSession",
+          "schema": {
+            "$ref": "#/backend/entities/ChatbotSession"
+          },
+          "description": "Stores chatbot sessions associated with a specific user. Enables path-based ownership.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "chatbotSessionId",
+              "description": "The unique identifier for the chatbot session."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to ensure security, scalability, and ease of debugging, adhering to the principles of Authorization Independence and Structural Segregation. User-related data is organized under the `/users/{userId}` path, enabling path-based ownership and simplified security rules. Verification Requests, Usage Statistics and Chatbot Sessions are stored as subcollections under each user document to maintain the 1:N relationship and enforce clear ownership. This structure supports the QAPs by segregating data based on ownership, eliminating the need for complex filtering in rules, and by ensuring all documents within a collection share the same security requirements.\n\nAuthorization Independence is achieved by storing all data relevant to authorization within the user's document or within the subcollections owned by the user. This avoids relying on `get()` calls to parent documents during security rule evaluation. For instance, access to verification requests is determined solely by the user ID in the path `/users/{userId}/verificationRequests/{verificationRequestId}`. This structure supports atomic operations and simplifies debugging.\n\nThe Membership Map access model is not required given the data structure is based on path-based ownership (`/users/{userId}`).\n\nThe segregation of user-owned data into separate collections (`/users/{userId}/verificationRequests`, `/users/{userId}/usageStatistics`, `/users/{userId}/chatbotSessions`) ensures a homogeneous security posture within each collection. This simplifies rules and allows for efficient `list` operations based on user ownership."
+  }
+}

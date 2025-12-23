@@ -1,0 +1,144 @@
+/**
+ * Core Philosophy: This ruleset enforces a strict user-ownership model. All user-generated content,
+ * including verification requests, usage statistics, and chatbot sessions, is private and accessible
+ * only by the user who created it. The security model is designed to be simple, performant, and
+ * highly secure by default.
+ *
+ * Data Structure: The data is organized hierarchically. A top-level 'users' collection holds individual
+ * user profile documents. All other data is stored in subcollections nested under the specific user's
+ * document (e.g., /users/{userId}/verificationRequests/{reqId}). This structure inherently links data
+ * to its owner via the document path.
+ *
+ * Key Security Decisions:
+ * - No User Listing: To protect user privacy, it is not possible to list all documents in the top-level
+ *   /users collection. A user can only fetch their own profile document.
+ * - Path-Based Security: All authorization decisions are based on the {userId} wildcard in the path.
+ *   This is fast, efficient, and avoids costly cross-document reads (`get()`).
+ * - Default Deny: Access is denied by default. Permissions are explicitly granted only when a user's
+ *   authenticated UID matches the user ID in the document path.
+ * - Relational Integrity: On creation, rules validate that the `userId` field within a subcollection
+ *   document matches the `{userId}` from the path, ensuring data consistency. Critical IDs are immutable
+ *   on update.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper Functions for reusability and clarity.
+
+    /**
+     * Checks if a user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user is the owner of the document,
+     * based on the userId provided from the path.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the document exists and the current user is the owner.
+     * CRITICAL: Used for safe updates and deletes to prevent operations on non-existent data.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource.data != null;
+    }
+
+    /**
+     * Validates required ownership fields for a new User document.
+     * Ensures the internal 'id' field matches the document's path ID.
+     */
+    function hasValidUserDataOnCreate(userId) {
+      return request.resource.data.id == userId;
+    }
+    
+    /**
+     * Ensures critical ownership fields of a User document cannot be changed.
+     */
+    function isUserDataImmutable() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Validates required ownership fields for a new subcollection document.
+     * Enforces that the internal 'userId' field matches the parent document's path ID.
+     */
+    function hasValidSubcollectionDataOnCreate(userId) {
+      return request.resource.data.userId == userId;
+    }
+
+    /**
+     * Ensures the 'userId' field in subcollection documents is immutable.
+     */
+    function isSubcollectionDataImmutable() {
+      return resource.data.userId == request.resource.data.userId;
+    }
+
+    /**
+     * @description Rules for a user's primary profile document.
+     * @path /users/{userId}
+     * @allow (get, update) A signed-in user fetching or updating their OWN profile document.
+     * @allow (create) A new user creating their profile for the first time.
+     * @deny (list) Any user attempting to list all users in the application.
+     * @deny (delete) Any user, including the owner, from deleting their profile.
+     * @principle Restricts access to a user's own data tree and allows self-creation of a profile.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && hasValidUserDataOnCreate(userId);
+      allow update: if isExistingOwner(userId) && isUserDataImmutable();
+      allow delete: if false;
+
+      /**
+       * @description Rules for a user's verification requests.
+       * @path /users/{userId}/verificationRequests/{verificationRequestId}
+       * @allow (get, list, create, update, delete) The owner of the data performing any operation on their own verification requests.
+       * @deny (get, list, create, update, delete) Any user trying to access another user's verification requests.
+       * @principle Enforces strict data ownership within a user's private subcollection.
+       */
+      match /verificationRequests/{verificationRequestId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && hasValidSubcollectionDataOnCreate(userId);
+        allow update: if isExistingOwner(userId) && isSubcollectionDataImmutable();
+        allow delete: if isExistingOwner(userId);
+      }
+
+      /**
+       * @description Rules for a user's private usage statistics.
+       * @path /users/{userId}/usageStatistics/{usageStatisticId}
+       * @allow (get, list, create, update, delete) The owner performing any operation on their own usage data.
+       * @deny (get, list, create, update, delete) Any user trying to access another user's usage data.
+       * @principle Enforces strict data ownership within a user's private subcollection.
+       */
+      match /usageStatistics/{usageStatisticId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && hasValidSubcollectionDataOnCreate(userId);
+        allow update: if isExistingOwner(userId) && isSubcollectionDataImmutable();
+        allow delete: if isExistingOwner(userId);
+      }
+
+      /**
+       * @description Rules for a user's private chatbot session history.
+       * @path /users/{userId}/chatbotSessions/{chatbotSessionId}
+       * @allow (get, list, create, update, delete) The owner performing any operation on their own chatbot sessions.
+       * @deny (get, list, create, update, delete) Any user trying to access another user's chatbot sessions.
+       * @principle Enforces strict data ownership within a user's private subcollection.
+       */
+      match /chatbotSessions/{chatbotSessionId} {
+        allow get: if isOwner(userId);
+        allow list: if isOwner(userId);
+        allow create: if isOwner(userId) && hasValidSubcollectionDataOnCreate(userId);
+        allow update: if isExistingOwner(userId) && isSubcollectionDataImmutable();
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+  }
+}
