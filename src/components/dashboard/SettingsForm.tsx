@@ -4,14 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useToast } from "@/hooks/use-toast";
+import React, { useEffect } from "react";
+import { doc } from "firebase/firestore";
+import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from "firebase/auth";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
-import React from "react";
+import { useUser, useFirestore, useAuth, useMemoFirebase, useDoc, setDocumentNonBlocking } from "@/firebase";
 
 const profileFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -29,12 +31,22 @@ const passwordFormSchema = z.object({
 
 export default function SettingsForm() {
     const { toast } = useToast();
+    const { user } = useUser();
+    const firestore = useFirestore();
+    const auth = useAuth();
     const [isSavingProfile, setIsSavingProfile] = React.useState(false);
     const [isSavingPassword, setIsSavingPassword] = React.useState(false);
 
+    const userDocRef = useMemoFirebase(() => {
+        if (!firestore || !user) return null;
+        return doc(firestore, 'users', user.uid);
+    }, [firestore, user]);
+
+    const { data: userProfile, isLoading: isProfileLoading } = useDoc(userDocRef);
+
     const profileForm = useForm<z.infer<typeof profileFormSchema>>({
         resolver: zodResolver(profileFormSchema),
-        defaultValues: { name: "Current User", email: "user@example.com" },
+        defaultValues: { name: "", email: "" },
     });
     
     const passwordForm = useForm<z.infer<typeof passwordFormSchema>>({
@@ -42,23 +54,50 @@ export default function SettingsForm() {
         defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
     });
 
+    useEffect(() => {
+        if (userProfile) {
+            profileForm.reset({
+                name: `${userProfile.firstName || ''} ${userProfile.lastName || ''}`.trim(),
+                email: userProfile.email || '',
+            });
+        }
+    }, [userProfile, profileForm]);
+
     function onProfileSubmit(values: z.infer<typeof profileFormSchema>) {
+        if (!userDocRef) return;
         setIsSavingProfile(true);
-        console.log("Profile update:", values);
-        setTimeout(() => {
-            toast({ title: "Profile updated successfully!" });
-            setIsSavingProfile(false);
-        }, 1000);
+        
+        const [firstName, ...lastName] = values.name.split(' ');
+        const updatedProfile = {
+            firstName,
+            lastName: lastName.join(' '),
+        };
+
+        setDocumentNonBlocking(userDocRef, updatedProfile, { merge: true });
+        
+        toast({ title: "Profile updated successfully!" });
+        setIsSavingProfile(false);
     }
     
-    function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
+    async function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
+        if (!user || !user.email) {
+            toast({ variant: "destructive", title: "Not authenticated" });
+            return;
+        }
         setIsSavingPassword(true);
-        console.log("Password update:", values);
-        setTimeout(() => {
+
+        try {
+            const credential = EmailAuthProvider.credential(user.email, values.currentPassword);
+            await reauthenticateWithCredential(user, credential);
+            await updatePassword(user, values.newPassword);
+            
             toast({ title: "Password changed successfully!" });
             passwordForm.reset();
+        } catch (error: any) {
+             toast({ variant: "destructive", title: "Password change failed", description: error.message });
+        } finally {
             setIsSavingPassword(false);
-        }, 1000);
+        }
     }
 
 
@@ -92,13 +131,15 @@ export default function SettingsForm() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="your@email.com" {...field} readOnly />
+                      <Input placeholder="your@email.com" {...field} readOnly disabled />
                     </FormControl>
                      <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" disabled={isSavingProfile}>{isSavingProfile ? "Saving..." : "Save Changes"}</Button>
+              <Button type="submit" disabled={isSavingProfile || isProfileLoading}>
+                {isSavingProfile ? "Saving..." : "Save Changes"}
+              </Button>
             </form>
           </Form>
         </CardContent>
@@ -137,10 +178,10 @@ export default function SettingsForm() {
             <div className="space-y-0.5">
                 <FormLabel>Two-Factor Authentication</FormLabel>
                 <CardDescription>
-                    Enhance your account security by enabling 2FA.
+                    Enhance your account security by enabling 2FA. (Coming soon)
                 </CardDescription>
             </div>
-            <Switch />
+            <Switch disabled />
           </div>
         </CardContent>
       </Card>

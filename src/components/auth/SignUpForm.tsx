@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import { doc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { signUpWithEmail } from "@/actions/auth";
+import { useAuth, useFirestore, setDocumentNonBlocking } from "@/firebase";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -32,6 +34,8 @@ const formSchema = z.object({
 
 export default function SignUpForm() {
   const router = useRouter();
+  const auth = useAuth();
+  const firestore = useFirestore();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -48,19 +52,36 @@ export default function SignUpForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     
-    const result = await signUpWithEmail(values);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+      const user = userCredential.user;
+      
+      const [firstName, ...lastName] = values.name.split(' ');
+      
+      const userProfile = {
+        id: user.uid,
+        email: user.email,
+        firstName: firstName,
+        lastName: lastName.join(' '),
+        registrationDate: new Date().toISOString(),
+      };
 
-    if (result.success) {
+      const userDocRef = doc(firestore, "users", user.uid);
+      setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
+
+      await sendEmailVerification(user);
+
       toast({
-        title: "Verification Code Sent",
-        description: "Please check your email for the verification code.",
+        title: "Verification Email Sent",
+        description: "Please check your email to verify your account.",
       });
       router.push(`/verify?email=${encodeURIComponent(values.email)}`);
-    } else {
+
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Sign Up Failed",
-        description: result.error,
+        description: error.message || "An unknown error occurred.",
       });
       setIsLoading(false);
     }
