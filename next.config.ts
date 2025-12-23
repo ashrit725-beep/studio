@@ -2,6 +2,11 @@ import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '4mb',
+    },
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -29,16 +34,13 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https' ,
         hostname: 'storage.googleapis.com',
         port: '',
         pathname: '/**',
       },
     ],
   },
-  serverActions: {
-    bodySizeLimit: '4mb',
-  }
 };
 
 export default nextConfig;
