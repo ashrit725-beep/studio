@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { collection, doc } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import DocumentUploader from "@/components/dashboard/DocumentUploader";
 import VerificationResult from "@/components/dashboard/VerificationResult";
 import UsageCharts from "@/components/dashboard/UsageCharts";
@@ -50,8 +50,8 @@ export default function DashboardPage() {
         />
         <VerificationResult result={analysisResult} isLoading={isLoading} />
       </div>
-      <VerificationStats recentVerifications={recentVerifications || []} />
       <UsageCharts verificationData={recentVerifications || []}/>
+      <VerificationStats recentVerifications={recentVerifications || []} />
     </div>
   );
 }
