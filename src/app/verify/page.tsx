@@ -1,7 +1,8 @@
+"use client"
+
 import Logo from "@/components/common/Logo";
 import VerifyForm from "@/components/auth/VerifyForm";
 import { Suspense } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 function VerifyContent() {
   return (

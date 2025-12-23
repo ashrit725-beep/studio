@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc } from "firebase/firestore";
 
@@ -29,15 +29,21 @@ const formSchema = z.object({
 
 export default function VerifyForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
-  const name = searchParams.get("name");
-  const password = searchParams.get("password");
+  const [email, setEmail] = useState<string | null>(null);
+  const [name, setName] = useState<string | null>(null);
+  const [password, setPassword] = useState<string | null>(null);
 
   const auth = useAuth();
   const firestore = useFirestore();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
+
+  useEffect(() => {
+    // Client-side only
+    setEmail(sessionStorage.getItem('signup_email'));
+    setName(sessionStorage.getItem('signup_name'));
+    setPassword(sessionStorage.getItem('signup_password'));
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -78,6 +84,11 @@ export default function VerifyForm() {
 
         const userDocRef = doc(firestore, "users", user.uid);
         setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
+
+        // Clear session storage
+        sessionStorage.removeItem('signup_email');
+        sessionStorage.removeItem('signup_name');
+        sessionStorage.removeItem('signup_password');
 
         toast({
           title: "Account Verified & Logged In!",
@@ -127,7 +138,7 @@ export default function VerifyForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button type="submit" className="w-full" disabled={isLoading || !email}>
               {isLoading ? "Verifying..." : "Verify & Continue"}
             </Button>
           </form>

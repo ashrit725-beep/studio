@@ -59,13 +59,12 @@ export default function SignUpForm() {
           description: "Please check your email for a 6-digit code.",
         });
         
-        // Redirect to the verify page with all necessary user details
-        const params = new URLSearchParams({
-          email: values.email,
-          name: values.name,
-          password: values.password, // This is okay for a short-lived redirect to a server-rendered page context
-        });
-        router.push(`/verify?${params.toString()}`);
+        // Store form data in session storage to pass to the verification page
+        sessionStorage.setItem('signup_email', values.email);
+        sessionStorage.setItem('signup_name', values.name);
+        sessionStorage.setItem('signup_password', values.password);
+
+        router.push(`/verify`);
 
       } else {
         toast({
