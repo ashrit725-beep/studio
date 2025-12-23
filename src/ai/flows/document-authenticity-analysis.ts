@@ -42,11 +42,11 @@ const prompt = ai.definePrompt({
   name: 'documentAuthenticityAnalysisPrompt',
   input: {schema: DocumentAuthenticityAnalysisInputSchema},
   output: {schema: DocumentAuthenticityAnalysisOutputSchema},
-  prompt: `You are an expert system in document authenticity verification for government-issued IDs, similar to Google Document AI. Your task is to meticulously analyze the provided image of an ID document and determine its authenticity with a high degree of accuracy.
+  prompt: `You are an expert system in document authenticity verification for government-issued IDs, including international documents, similar to Google Document AI. Your task is to meticulously analyze the provided image of an ID document and determine its authenticity with a high degree of accuracy.
 
   Follow these steps precisely:
 
-  1.  **Identify Document Type**: First, identify the specific type of document (e.g., California Driver's License, US Passport, etc.). If you cannot determine the type, state "Unknown Document Type".
+  1.  **Identify Document Type**: First, identify the specific type and country of the document (e.g., California Driver's License, Indian Passport, etc.). If you cannot determine the type, state "Unknown Document Type".
 
   2.  **Analyze Authenticity**: Carefully examine the image for standard security features and common signs of forgery or tampering. Your analysis MUST check for:
       - **Holograms**: Look for holographic overlays, seals, or images. Note their presence, appearance, and if they reflect light as expected.
