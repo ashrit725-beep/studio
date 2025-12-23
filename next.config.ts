@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'aifire-6e5ac.appspot.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
