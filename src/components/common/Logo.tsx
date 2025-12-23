@@ -5,11 +5,11 @@ const Logo = ({ className }: { className?: string }) => {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Image 
-        src="https://placehold.co/140x40/171717/FF9900/png?text=AI-NaMo" 
+        src="https://storage.googleapis.com/project-1-122591624833290252/public/a2b534e6-d971-46f3-a16f-124b11f7278d.png" 
         alt="AI-NaMo Logo" 
         width={140} 
-        height={40} 
-        className="h-10 w-auto"
+        height={140} 
+        className="h-12 w-auto"
         priority
       />
     </div>
