@@ -5,3 +5,15 @@ export type VerificationHistoryItem = {
   status: 'Verified' | 'Failed' | 'In Progress';
   confidence: number;
 };
+
+
+export type VerificationRequest = {
+  id: string;
+  userId: string;
+  documentType: string;
+  uploadTimestamp: string;
+  verificationStatus: 'pending' | 'processing' | 'completed' | 'Failed' | 'Verified';
+  authenticityScore: number;
+  isReal: boolean;
+  documentAiResponse: string;
+}

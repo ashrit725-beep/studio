@@ -1,20 +1,43 @@
 "use client";
 
 import React from "react";
+import { collection, doc } from "firebase/firestore";
 import DocumentUploader from "@/components/dashboard/DocumentUploader";
 import VerificationResult from "@/components/dashboard/VerificationResult";
 import UsageCharts from "@/components/dashboard/UsageCharts";
 import VerificationStats from "@/components/dashboard/VerificationStats";
 import type { DocumentAuthenticityAnalysisOutput } from "@/ai/flows/document-authenticity-analysis";
+import { useUser, useFirestore, addDocumentNonBlocking, useCollection, useMemoFirebase } from "@/firebase";
+import { VerificationRequest } from "@/types";
 
 export default function DashboardPage() {
   const [analysisResult, setAnalysisResult] = React.useState<DocumentAuthenticityAnalysisOutput | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [recentVerifications, setRecentVerifications] = React.useState<DocumentAuthenticityAnalysisOutput[]>([]);
+  const { user } = useUser();
+  const firestore = useFirestore();
+
+  const userVerificationsQuery = useMemoFirebase(() => {
+    if (!firestore || !user) return null;
+    return collection(firestore, `users/${user.uid}/verificationRequests`);
+  }, [firestore, user]);
+  
+  const { data: recentVerifications } = useCollection<VerificationRequest>(userVerificationsQuery);
+
 
   const handleAnalysisComplete = (result: DocumentAuthenticityAnalysisOutput) => {
     setAnalysisResult(result);
-    setRecentVerifications(prev => [result, ...prev].slice(0, 5));
+    if (user && userVerificationsQuery) {
+        const newVerification: Omit<VerificationRequest, 'id'> = {
+            userId: user.uid,
+            documentType: result.documentType,
+            uploadTimestamp: new Date().toISOString(),
+            verificationStatus: result.authenticity.isReal ? 'Verified' : 'Failed',
+            authenticityScore: result.authenticity.confidenceScore,
+            isReal: result.authenticity.isReal,
+            documentAiResponse: result.authenticity.analysisDetails,
+        }
+        addDocumentNonBlocking(userVerificationsQuery, newVerification);
+    }
   };
 
   return (
@@ -27,8 +50,8 @@ export default function DashboardPage() {
         />
         <VerificationResult result={analysisResult} isLoading={isLoading} />
       </div>
-      <VerificationStats recentVerifications={recentVerifications} />
-      <UsageCharts />
+      <VerificationStats recentVerifications={recentVerifications || []} />
+      <UsageCharts verificationData={recentVerifications || []}/>
     </div>
   );
 }

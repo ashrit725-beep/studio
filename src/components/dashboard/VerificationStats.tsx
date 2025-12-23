@@ -1,16 +1,17 @@
 "use client";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { DocumentAuthenticityAnalysisOutput } from "@/ai/flows/document-authenticity-analysis";
+import { VerificationRequest } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle } from "lucide-react";
 
 interface VerificationStatsProps {
-    recentVerifications: DocumentAuthenticityAnalysisOutput[];
+    recentVerifications: VerificationRequest[];
 }
 
 export default function VerificationStats({ recentVerifications }: VerificationStatsProps) {
-  const totalVerified = recentVerifications.filter(v => v.authenticity.isReal).length;
-  const totalFailed = recentVerifications.filter(v => !v.authenticity.isReal).length;
+  const last5Verifications = recentVerifications.slice(0, 5);
+  const totalVerified = last5Verifications.filter(v => v.isReal).length;
+  const totalFailed = last5Verifications.filter(v => !v.isReal).length;
 
   return (
     <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -29,7 +30,7 @@ export default function VerificationStats({ recentVerifications }: VerificationS
                     <p className="text-sm text-muted-foreground">Failed</p>
                 </div>
                  <div className="text-center">
-                    <p className="text-2xl font-bold">{recentVerifications.length}</p>
+                    <p className="text-2xl font-bold">{last5Verifications.length}</p>
                     <p className="text-sm text-muted-foreground">Total</p>
                 </div>
             </CardContent>
@@ -40,16 +41,16 @@ export default function VerificationStats({ recentVerifications }: VerificationS
                 <CardDescription>A log of your most recent checks.</CardDescription>
             </CardHeader>
             <CardContent>
-                {recentVerifications.length === 0 ? (
+                {last5Verifications.length === 0 ? (
                     <p className="text-muted-foreground text-center">No recent verifications.</p>
                 ) : (
                     <ul className="space-y-3">
-                        {recentVerifications.map((verification, index) => (
-                             <li key={index} className="flex items-center justify-between p-2 rounded-lg bg-secondary/50">
+                        {last5Verifications.map((verification) => (
+                             <li key={verification.id} className="flex items-center justify-between p-2 rounded-lg bg-secondary/50">
                                 <span className="font-medium">{verification.documentType}</span>
-                                <Badge variant={verification.authenticity.isReal ? "default" : "destructive"}>
-                                    {verification.authenticity.isReal ? <CheckCircle className="h-4 w-4 mr-1"/> : <XCircle className="h-4 w-4 mr-1" />}
-                                    {Math.round(verification.authenticity.confidenceScore * 100)}%
+                                <Badge variant={verification.isReal ? "default" : "destructive"}>
+                                    {verification.isReal ? <CheckCircle className="h-4 w-4 mr-1"/> : <XCircle className="h-4 w-4 mr-1" />}
+                                    {Math.round(verification.authenticityScore * 100)}%
                                 </Badge>
                              </li>
                         ))}

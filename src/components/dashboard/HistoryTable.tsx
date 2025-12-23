@@ -11,17 +11,20 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { VerificationHistoryItem } from "@/types";
+import { VerificationRequest } from "@/types";
+import { format } from 'date-fns';
 
 interface HistoryTableProps {
-  data: VerificationHistoryItem[];
+  data: VerificationRequest[];
   isLoading?: boolean;
 }
 
-const statusVariantMap: { [key in VerificationHistoryItem['status']]: "default" | "destructive" | "secondary" } = {
+const statusVariantMap: { [key in VerificationRequest['verificationStatus']]: "default" | "destructive" | "secondary" } = {
     'Verified': 'default',
     'Failed': 'destructive',
-    'In Progress': 'secondary'
+    'pending': 'secondary',
+    'processing': 'secondary',
+    'completed': 'default',
 }
 
 export default function HistoryTable({ data, isLoading }: HistoryTableProps) {
@@ -61,12 +64,12 @@ export default function HistoryTable({ data, isLoading }: HistoryTableProps) {
                     data.map((item) => (
                         <TableRow key={item.id}>
                         <TableCell className="font-medium">{item.documentType}</TableCell>
-                        <TableCell>{item.date}</TableCell>
+                        <TableCell>{format(new Date(item.uploadTimestamp), 'PP')}</TableCell>
                         <TableCell>
-                            <Badge variant={statusVariantMap[item.status]}>{item.status}</Badge>
+                            <Badge variant={statusVariantMap[item.verificationStatus]}>{item.verificationStatus}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                            {item.status === 'In Progress' ? 'N/A' : `${(item.confidence * 100).toFixed(0)}%`}
+                            {item.verificationStatus === 'processing' ? 'N/A' : `${(item.authenticityScore * 100).toFixed(0)}%`}
                         </TableCell>
                         </TableRow>
                     ))

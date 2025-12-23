@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp, TrendingDown, CheckCircle, XCircle } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, LabelList, Pie, PieChart, Cell } from "recharts"
 import {
   Card,
   CardContent,
@@ -16,15 +16,10 @@ import {
   ChartTooltipContent,
   ChartConfig
 } from "@/components/ui/chart"
+import { VerificationRequest } from "@/types"
+import { useMemo } from "react"
+import { format, subMonths, getMonth } from 'date-fns'
 
-const monthlyVerificationsData = [
-  { month: "January", count: 186, fill: "var(--color-desktop)" },
-  { month: "February", count: 305, fill: "var(--color-desktop)" },
-  { month: "March", count: 237, fill: "var(--color-desktop)" },
-  { month: "April", count: 273, fill: "var(--color-desktop)" },
-  { month: "May", count: 209, fill: "var(--color-desktop)" },
-  { month: "June", count: 214, fill: "var(--color-desktop)" },
-];
 
 const monthlyVerificationsConfig = {
   count: {
@@ -35,34 +30,63 @@ const monthlyVerificationsConfig = {
     color: "hsl(var(--primary))",
   },
 } satisfies ChartConfig;
-
-
-const statusData = [
-    { status: "Verified", count: 45, fill: "hsl(var(--chart-2))" },
-    { status: "Failed", count: 8, fill: "hsl(var(--destructive))" },
-]
   
 const statusChartConfig = {
     count: {
       label: "Count",
     },
-    verified: {
+    Verified: {
       label: "Verified",
       color: "hsl(var(--chart-2))",
     },
-    failed: {
+    Failed: {
       label: "Failed",
       color: "hsl(var(--destructive))",
     },
   } satisfies ChartConfig
 
-export default function UsageCharts() {
+interface UsageChartsProps {
+  verificationData: VerificationRequest[];
+}
+
+export default function UsageCharts({ verificationData }: UsageChartsProps) {
+    const monthlyVerificationsData = useMemo(() => {
+        const last6Months = Array.from({ length: 6 }).map((_, i) => subMonths(new Date(), i)).reverse();
+        const monthlyCounts = last6Months.map(monthDate => {
+            const monthName = format(monthDate, 'MMMM');
+            const month = getMonth(monthDate);
+
+            const count = verificationData.filter(v => getMonth(new Date(v.uploadTimestamp)) === month).length;
+            return { month: monthName, count };
+        });
+        return monthlyCounts;
+    }, [verificationData]);
+
+    const statusData = useMemo(() => {
+        const verified = verificationData.filter(v => v.verificationStatus === 'Verified').length;
+        const failed = verificationData.filter(v => v.verificationStatus === 'Failed').length;
+        const total = verified + failed;
+        if(total === 0) return [];
+        return [
+            { status: "Verified", count: verified, fill: "hsl(var(--chart-2))" },
+            { status: "Failed", count: failed, fill: "hsl(var(--destructive))" },
+        ]
+    }, [verificationData]);
+
+    const successRate = useMemo(() => {
+        const total = verificationData.length;
+        if (total === 0) return 0;
+        const verified = verificationData.filter(v => v.isReal).length;
+        return (verified / total) * 100;
+    }, [verificationData]);
+
+
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-7">
         <Card className="lg:col-span-4">
             <CardHeader>
             <CardTitle>Monthly Verifications</CardTitle>
-            <CardDescription>January - June 2024</CardDescription>
+            <CardDescription>{format(subMonths(new Date(), 5), 'MMMM')} - {format(new Date(), 'MMMM')} {format(new Date(), 'yyyy')}</CardDescription>
             </CardHeader>
             <CardContent>
             <ChartContainer config={monthlyVerificationsConfig}>
@@ -81,11 +105,12 @@ export default function UsageCharts() {
                     axisLine={false}
                     tickFormatter={(value) => value.slice(0, 3)}
                 />
+                <YAxis dataKey="count" hide/>
                 <ChartTooltip
                     cursor={false}
                     content={<ChartTooltipContent indicator="dot" />}
                 />
-                <Bar dataKey="count" radius={8}>
+                <Bar dataKey="count" radius={8} fill="hsl(var(--primary))">
                     <LabelList
                     position="top"
                     offset={12}
@@ -97,9 +122,6 @@ export default function UsageCharts() {
             </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
-            <div className="flex gap-2 font-medium leading-none">
-                Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
             <div className="leading-none text-muted-foreground">
                 Showing total verifications for the last 6 months
             </div>
@@ -112,8 +134,8 @@ export default function UsageCharts() {
             </CardHeader>
             <CardContent className="grid gap-4">
                 <div className="grid auto-rows-min gap-2">
-                    <div className="flex items-baseline gap-2 text-2xl font-bold text-green-500 tabular-nums">
-                        84.9%
+                    <div className="flex items-baseline gap-2 text-2xl font-bold text-primary tabular-nums">
+                        {successRate.toFixed(1)}%
                         <span className="text-sm font-normal text-muted-foreground">Success Rate</span>
                     </div>
                 </div>
@@ -121,49 +143,22 @@ export default function UsageCharts() {
                     config={statusChartConfig}
                     className="aspect-auto h-[140px] w-full"
                     >
-                    <BarChart
-                        accessibilityLayer
-                        layout="vertical"
-                        data={statusData}
-                        margin={{ left: -20, top: 10, bottom: 10 }}
-                    >
-                        <XAxis type="number" dataKey="count" hide />
-                        <YAxis
-                        dataKey="status"
-                        type="category"
-                        tickLine={false}
-                        axisLine={false}
-                        tick={false}
-                        />
-                        <Bar
-                            dataKey="count"
-                            layout="vertical"
-                            radius={5}
-                        >
-                        <LabelList
-                            dataKey="status"
-                            position="insideLeft"
-                            offset={8}
-                            className="fill-white font-semibold"
-                            fontSize={12}
-                            />
-                        <LabelList
-                            dataKey="count"
-                            position="right"
-                            offset={8}
-                            className="fill-foreground font-semibold"
-                            fontSize={12}
-                        />
-                        </Bar>
-                    </BarChart>
+                     <PieChart>
+                         <ChartTooltip content={<ChartTooltipContent hideLabel />} />
+                         <Pie data={statusData} dataKey="count" nameKey="status" innerRadius={50}>
+                             {statusData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                            ))}
+                         </Pie>
+                     </PieChart>
                 </ChartContainer>
             </CardContent>
              <CardFooter className="flex-col items-start gap-2 text-sm">
                 <div className="flex gap-2 font-medium leading-none items-center text-green-500">
-                    <CheckCircle className="h-4 w-4" /> 45 Verifications successful
+                    <CheckCircle className="h-4 w-4" /> {statusData.find(d => d.status === 'Verified')?.count || 0} Verifications successful
                 </div>
                 <div className="flex gap-2 font-medium leading-none items-center text-red-500">
-                    <XCircle className="h-4 w-4" /> 8 Verifications failed
+                    <XCircle className="h-4 w-4" /> {statusData.find(d => d.status === 'Failed')?.count || 0} Verifications failed
                 </div>
             </CardFooter>
         </Card>
