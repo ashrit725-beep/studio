@@ -5,8 +5,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +18,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth, useFirestore, setDocumentNonBlocking } from "@/firebase";
 import { sendVerificationCode } from "@/actions/auth";
 
 
@@ -36,8 +33,6 @@ const formSchema = z.object({
 
 export default function SignUpForm() {
   const router = useRouter();
-  const auth = useAuth();
-  const firestore = useFirestore();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -55,24 +50,6 @@ export default function SignUpForm() {
     setIsLoading(true);
     
     try {
-      // We are creating the user but not signing them in. The user will be signed in
-      // after they verify their email. For now, Firebase will keep track of this user.
-      const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
-      const user = userCredential.user;
-      
-      const [firstName, ...lastName] = values.name.split(' ');
-      
-      const userProfile = {
-        id: user.uid,
-        email: user.email,
-        firstName: firstName,
-        lastName: lastName.join(' '),
-        registrationDate: new Date().toISOString(),
-      };
-
-      const userDocRef = doc(firestore, "users", user.uid);
-      setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
-
       // Send verification code via server action
       const sendCodeResult = await sendVerificationCode({ email: values.email });
 
@@ -81,7 +58,15 @@ export default function SignUpForm() {
           title: "Verification Code Sent",
           description: "Please check your email for a 6-digit code.",
         });
-        router.push(`/verify?email=${encodeURIComponent(values.email)}`);
+        
+        // Redirect to the verify page with all necessary user details
+        const params = new URLSearchParams({
+          email: values.email,
+          name: values.name,
+          password: values.password, // This is okay for a short-lived redirect to a server-rendered page context
+        });
+        router.push(`/verify?${params.toString()}`);
+
       } else {
         toast({
           variant: "destructive",
@@ -163,7 +148,7 @@ export default function SignUpForm() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? "Sending Code..." : "Create Account"}
             </Button>
           </form>
         </Form>

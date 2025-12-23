@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc } from "firebase/firestore";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { verifyCode } from "@/actions/auth";
+import { useAuth, useFirestore, setDocumentNonBlocking } from "@/firebase";
 
 const formSchema = z.object({
   code: z.string().length(6, { message: "Verification code must be 6 digits." }),
@@ -28,6 +31,11 @@ export default function VerifyForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const name = searchParams.get("name");
+  const password = searchParams.get("password");
+
+  const auth = useAuth();
+  const firestore = useFirestore();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -39,11 +47,11 @@ export default function VerifyForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (!email) {
+    if (!email || !name || !password) {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Email not found. Please sign up again.",
+        description: "Missing user information. Please sign up again.",
       });
       router.push("/signup");
       return;
@@ -54,11 +62,37 @@ export default function VerifyForm() {
     const result = await verifyCode({ email, code: values.code });
 
     if (result.success) {
-      toast({
-        title: "Account Verified!",
-        description: "You have successfully created your account. Please log in.",
-      });
-      router.push("/login");
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        const [firstName, ...lastName] = name.split(' ');
+        
+        const userProfile = {
+          id: user.uid,
+          email: user.email,
+          firstName: firstName,
+          lastName: lastName.join(' '),
+          registrationDate: new Date().toISOString(),
+        };
+
+        const userDocRef = doc(firestore, "users", user.uid);
+        setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
+
+        toast({
+          title: "Account Verified & Logged In!",
+          description: "Welcome! Redirecting you to the dashboard.",
+        });
+        router.push("/dashboard");
+
+      } catch (error: any) {
+        toast({
+          variant: "destructive",
+          title: "Account Creation Failed",
+          description: error.message || "Could not create your account after verification.",
+        });
+        setIsLoading(false);
+      }
     } else {
       toast({
         variant: "destructive",
@@ -94,7 +128,7 @@ export default function VerifyForm() {
               )}
             />
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Verifying..." : "Verify Account"}
+              {isLoading ? "Verifying..." : "Verify & Continue"}
             </Button>
           </form>
         </Form>
