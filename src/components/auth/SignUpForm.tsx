@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { signUpWithEmail } from "@/actions/auth";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -44,18 +45,25 @@ export default function SignUpForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    console.log(values);
-    // Simulate API call
-    setTimeout(() => {
+    
+    const result = await signUpWithEmail(values);
+
+    if (result.success) {
       toast({
-        title: "Account Created",
-        description: "You have successfully signed up. Redirecting to login...",
+        title: "Verification Code Sent",
+        description: "Please check your email for the verification code.",
       });
-      router.push("/login");
+      router.push(`/verify?email=${encodeURIComponent(values.email)}`);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Sign Up Failed",
+        description: result.error,
+      });
       setIsLoading(false);
-    }, 1000);
+    }
   }
 
   return (
