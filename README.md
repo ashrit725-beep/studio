@@ -25,6 +25,30 @@ Fake IDs are getting better and easier to make. This is a big problem for busine
 
 Because of these risks, we need a simple and reliable way to spot fake documents. That's what AI-NaMo is for.
 
+## Slide 3 - Existing Solutions
+
+While several identity verification solutions exist, they often fall short of being accessible and efficient for everyone.
+
+**Current Solutions:**
+
+Major players like **Onfido**, **Jumio**, and **Veriff** offer powerful identity verification platforms. They are trusted by large enterprises in finance, tech, and government.
+
+**Key Features of Existing Solutions:**
+
+*   **AI-Powered Analysis**: They use AI to analyze government-issued IDs, check for security features, and match the ID photo to a live selfie.
+*   **Liveness Detection**: These platforms can determine if a person is physically present during the verification process to prevent spoofing.
+*   **Global Coverage**: They support a wide range of documents from many different countries.
+
+**Limitations of These Solutions:**
+
+*   **High Cost**: These services are very expensive and are typically priced for large corporations. A small business, a non-profit, or an individual developer often can't afford them.
+*   **Complex Integration**: Setting up these solutions can be complicated, requiring significant technical resources and development time.
+*   **Lack of Transparency**: The pricing models are often not straightforward, and it can be hard to know what you'll actually pay.
+
+**The Need for a Better Tool:**
+
+There is a clear gap in the market for a solution that is both powerful and accessible. We need a tool that offers reliable, AI-driven identity verification without the high costs and complexity of enterprise-grade platforms. This is where **AI-NaMo** comes in—it provides a free, secure, and easy-to-use alternative for anyone who needs to verify identities with confidence.
+
 ## Core Features
 
 - **Secure User Authentication**: User registration and login with robust security measures.
@@ -43,3 +67,5 @@ npm run dev
 ```
 
 Then, open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
+
+```
