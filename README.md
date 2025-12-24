@@ -71,6 +71,32 @@ AI-NaMo directly addresses the shortcomings of manual verification by using adva
 
 While powerful enterprise solutions exist, they are often too expensive and complicated for small businesses, non-profits, or individual developers. AI-NaMo provides a powerful, secure, and easy-to-use alternative that is completely free, making reliable identity verification accessible to everyone.
 
+## Slide 6 - Future Scope
+
+Our vision for AI-NaMo extends beyond its initial launch. We have a clear roadmap for deploying, growing, and enhancing the platform to become a leading solution in accessible identity verification.
+
+**Defining the Customer Base**
+
+*   **Initial Focus**: Our primary audience includes small to medium-sized businesses (SMBs), such as retail stores, bars, and local event organizers, who need a cost-effective verification tool. We will also target individual developers and startups looking for a free and easy-to-integrate solution.
+*   **Secondary Market**: We plan to expand our reach to non-profit organizations and educational institutions that require reliable identity verification for volunteers, students, or members.
+
+**Product Roll-out Plan**
+
+1.  **Phase 1: Closed Beta (Q3 2024)** - We will launch an invite-only beta with a select group of local businesses to gather real-world feedback and refine our core features.
+2.  **Phase 2: Public Launch (Q4 2024)** - The platform will be made publicly available, offering free AI-powered document verification to all users.
+3.  **Phase 3: API Introduction (2025)** - We will release a developer-friendly API to allow seamless integration of AI-NaMo's verification capabilities into third-party websites and applications.
+
+**Product Enhancement**
+
+*   **Liveness Detection**: To combat advanced spoofing attempts, we will implement liveness detection to ensure the person is physically present during the verification process.
+*   **Expanded Document Support**: We will continuously expand our database to support a wider range of international IDs and government-issued documents.
+*   **Native Mobile Applications**: We plan to develop dedicated mobile apps for iOS and Android to provide a seamless verification experience on the go.
+
+**Scope of Improvement**
+
+*   **AI Model Refinement**: Our AI model will be continuously trained on new data to improve its accuracy in detecting increasingly sophisticated fraudulent documents.
+*   **User Experience (UX) Optimization**: We will regularly gather user feedback to enhance the dashboard, streamline the verification workflow, and improve the overall user experience.
+*   **Security Audits**: We will conduct regular security audits and updates to ensure the platform remains secure and compliant with data protection standards.
 ## Core Features
 
 - **Secure User Authentication**: User registration and login with robust security measures.
@@ -89,4 +115,3 @@ npm run dev
 ```
 
 Then, open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
-
