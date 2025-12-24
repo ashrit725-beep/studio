@@ -106,6 +106,13 @@ Our vision for AI-NaMo extends beyond its initial launch. We have a clear roadma
 - **Usage Statistics**: Visualize your verification activity with detailed charts and graphs.
 - **AI Chatbot**: Get instant assistance and answers to your questions through an integrated AI chatbot.
 
+## Tips for Making a Perfect Pitch Deck
+
+*   The deck should include all the information suggested in this template.
+*   It should not be text-heavy, and information should be presented aesthetically – using infographics, pictures, animations, graphics, and more.
+*   Proper research should be done about the problem statement, existing solutions, and technologies behind your solution - in order to ensure that your deck explains it all.
+*   It is recommended that you use various AI-powered tools available online to make your deck as professional as possible (tools like Canva, ChatGPT, Gemini, PPT maker, etc.).
+
 ## Getting Started
 
 To get started, run the development server:
