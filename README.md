@@ -1,11 +1,33 @@
 # AI-NaMo: Secure Identity Verification
 
-This is a Next.js application for AI-NaMo, a free AI-powered identity verification platform for verifying government-issued ID documents.
-
 - **Project Name**: AI-NaMo
 - **One-liner**: A free AI-powered identity verification platform for verifying government-issued ID documents.
 - **Student(s)**: Ashrit Talluri
 - **Country**: United States
+
+## Slide 2 - Problem Statement
+
+### The Targeted Problem
+
+In an increasingly digital world, the need for reliable identity verification is more critical than ever. However, the sophistication of fraudulent documents, such as fake IDs and passports, is advancing rapidly. This creates a significant challenge for businesses, government agencies, and other organizations that rely on accurate identity verification to prevent fraud, ensure compliance, and maintain security. Traditional verification methods are often manual, time-consuming, and prone to human error, making them ill-equipped to handle the scale and complexity of modern identity fraud.
+
+### Evidence of Existence
+
+Identity fraud is a widespread and growing issue with substantial real-world consequences.
+
+-   **Global Statistics**: According to a 2023 report by the Identity Theft Resource Center, identity fraud losses have cost individuals and businesses billions of dollars annually. The report highlights a significant increase in the use of sophisticated fake identities.
+-   **National Impact (U.S.)**: The Federal Trade Commission (FTC) receives millions of identity theft reports each year. In 2022, the FTC's Consumer Sentinel Network took in 5.1 million reports, with identity theft being one of the top categories.
+-   **Local Mentions**: Local news outlets frequently report on incidents involving fake IDs, from underage drinking at bars to more severe financial crimes, demonstrating the problem's impact at a community level.
+
+### Impact of the Problem
+
+The impact of identity fraud is felt at every level of society.
+
+-   **Local Level**: Businesses face financial losses from fraudulent transactions, legal penalties for non-compliance (e.g., serving minors), and damage to their reputation.
+-   **National Level**: On a national scale, identity fraud undermines financial systems, enables tax fraud, and poses risks to national security by allowing unauthorized access to restricted areas or services.
+-   **Global Level**: Internationally, fraudulent identities facilitate money laundering, human trafficking, and other transnational crimes, making it a critical global security concern.
+
+This environment creates a clear need for an accessible, reliable, and technologically advanced solution like AI-NaMo to provide a first line of defense against identity fraud.
 
 ## Core Features
 
