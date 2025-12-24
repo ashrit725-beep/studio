@@ -7,27 +7,23 @@
 
 ## Slide 2 - Problem Statement
 
-### The Targeted Problem
+### The Problem We're Solving
 
-In an increasingly digital world, the need for reliable identity verification is more critical than ever. However, the sophistication of fraudulent documents, such as fake IDs and passports, is advancing rapidly. This creates a significant challenge for businesses, government agencies, and other organizations that rely on accurate identity verification to prevent fraud, ensure compliance, and maintain security. Traditional verification methods are often manual, time-consuming, and prone to human error, making them ill-equipped to handle the scale and complexity of modern identity fraud.
+Fake IDs are getting better and easier to make. This is a big problem for businesses and organizations that need to know if someone is really who they say they are. Checking IDs by hand is slow and people can make mistakes, which means it's hard to catch the good fakes. This opens the door for fraud and security issues.
 
-### Evidence of Existence
+### How We Know This is a Real Problem
 
-Identity fraud is a widespread and growing issue with substantial real-world consequences.
+*   **It's Happening Everywhere**: Identity theft is a huge issue. Reports show it costs people and businesses billions of dollars every year.
+*   **In the U.S.**: The government gets millions of reports about identity theft. In 2022, there were over 5 million cases reported to the Federal Trade Commission (FTC).
+*   **In Your Town**: You hear stories on the local news all the time about fake IDs being used for everything from buying alcohol to committing serious crimes.
 
--   **Global Statistics**: According to a 2023 report by the Identity Theft Resource Center, identity fraud losses have cost individuals and businesses billions of dollars annually. The report highlights a significant increase in the use of sophisticated fake identities.
--   **National Impact (U.S.)**: The Federal Trade Commission (FTC) receives millions of identity theft reports each year. In 2022, the FTC's Consumer Sentinel Network took in 5.1 million reports, with identity theft being one of the top categories.
--   **Local Mentions**: Local news outlets frequently report on incidents involving fake IDs, from underage drinking at bars to more severe financial crimes, demonstrating the problem's impact at a community level.
+### Why This Problem Matters
 
-### Impact of the Problem
+*   **For Local Businesses**: A local store or bar could face big fines or even lose its license if it accepts a fake ID. It can also hurt their reputation in the community.
+*   **For the Country**: At the national level, fake IDs are used for big problems like tax fraud and can even be a threat to national security if someone gets into a place they shouldn't be.
+*   **For the World**: Globally, fake identities help criminals with serious crimes like money laundering and human trafficking. It's a key part of how major criminal groups operate.
 
-The impact of identity fraud is felt at every level of society.
-
--   **Local Level**: Businesses face financial losses from fraudulent transactions, legal penalties for non-compliance (e.g., serving minors), and damage to their reputation.
--   **National Level**: On a national scale, identity fraud undermines financial systems, enables tax fraud, and poses risks to national security by allowing unauthorized access to restricted areas or services.
--   **Global Level**: Internationally, fraudulent identities facilitate money laundering, human trafficking, and other transnational crimes, making it a critical global security concern.
-
-This environment creates a clear need for an accessible, reliable, and technologically advanced solution like AI-NaMo to provide a first line of defense against identity fraud.
+Because of these risks, we need a simple and reliable way to spot fake documents. That's what AI-NaMo is for.
 
 ## Core Features
 
