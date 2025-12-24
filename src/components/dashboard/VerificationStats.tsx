@@ -3,13 +3,19 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { VerificationRequest } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle } from "lucide-react";
+import { useMemo } from "react";
 
 interface VerificationStatsProps {
     recentVerifications: VerificationRequest[];
 }
 
 export default function VerificationStats({ recentVerifications }: VerificationStatsProps) {
-  const last5Verifications = recentVerifications.slice(0, 5);
+  const last5Verifications = useMemo(() => {
+    return [...recentVerifications]
+      .sort((a, b) => new Date(b.uploadTimestamp).getTime() - new Date(a.uploadTimestamp).getTime())
+      .slice(0, 5);
+  }, [recentVerifications]);
+
   const totalVerified = last5Verifications.filter(v => v.isReal).length;
   const totalFailed = last5Verifications.filter(v => !v.isReal).length;
 
