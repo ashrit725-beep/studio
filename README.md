@@ -9,17 +9,17 @@
 
 ### The Problem We're Solving
 
-Fake IDs are getting better and easier to make. This is a big problem for businesses and organizations that need to know if someone is really who they say they are. Checking IDs by hand is slow and people can make mistakes, which means it's hard to catch the good fakes. This opens the door for fraud and security issues.
+Fake IDs are getting better and easier to make, often using AI. This is a big problem for businesses and organizations that need to know if someone is really who they say they are. Checking IDs by hand is slow, people make mistakes, and it's hard to catch the good fakes. This opens the door for fraud and security issues that cost billions.
 
 ### How We Know This is a Real Problem
 
-*   **It's Happening Everywhere**: Identity theft is a huge issue. Reports show it costs people and businesses billions of dollars every year.
-*   **In the U.S.**: The government gets millions of reports about identity theft. In 2022, there were over 5 million cases reported to the Federal Trade Commission (FTC).
-*   **In Your Town**: You hear stories on the local news all the time about fake IDs being used for everything from buying alcohol to committing serious crimes.
+*   **Financial Losses Are Soaring**: In 2023, identity fraud cost Americans **$43 billion**, a 13% increase from the previous year. It's a massive and growing financial threat. (Source: AARP)
+*   **Fraud Attempts Are Increasing**: The rate of online identity fraud jumped by **21%** in the last year alone. For many businesses, 1 in every 20 verification attempts is now fraudulent. (Source: Veriff)
+*   **Businesses Are Feeling the Impact**: Nearly **60% of U.S. businesses** reported higher losses due to fraud in the past year, with many seeing AI-generated fakes as a top challenge. (Source: Experian)
 
 ### Why This Problem Matters
 
-*   **For Local Businesses**: A local store or bar could face big fines or even lose its license if it accepts a fake ID. It can also hurt their reputation in the community.
+*   **For Local Businesses**: A local store or bar could face big fines or even lose its license if it accepts a fake ID. It also hurts their reputation in the community.
 *   **For the Country**: At the national level, fake IDs are used for big problems like tax fraud and can even be a threat to national security if someone gets into a place they shouldn't be.
 *   **For the World**: Globally, fake identities help criminals with serious crimes like money laundering and human trafficking. It's a key part of how major criminal groups operate.
 
