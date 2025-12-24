@@ -2,6 +2,11 @@
 
 This is a Next.js application for AI-NaMo, a free AI-powered identity verification platform for verifying government-issued ID documents.
 
+- **Project Name**: AI-NaMo
+- **One-liner**: A free AI-powered identity verification platform for verifying government-issued ID documents.
+- **Student(s)**: Ashrit Talluri
+- **Country**: United States
+
 ## Core Features
 
 - **Secure User Authentication**: User registration and login with robust security measures.
