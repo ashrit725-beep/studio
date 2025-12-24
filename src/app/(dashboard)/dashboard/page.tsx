@@ -26,7 +26,8 @@ export default function DashboardPage() {
 
   const handleAnalysisComplete = (result: DocumentAuthenticityAnalysisOutput) => {
     setAnalysisResult(result);
-    if (user && userVerificationsQuery) {
+    if (user && firestore) {
+        const userVerificationsCollection = collection(firestore, `users/${user.uid}/verificationRequests`);
         const newVerification: Omit<VerificationRequest, 'id'> = {
             userId: user.uid,
             documentType: result.documentType,
@@ -36,7 +37,7 @@ export default function DashboardPage() {
             isReal: result.authenticity.isReal,
             documentAiResponse: result.authenticity.analysisDetails,
         }
-        addDocumentNonBlocking(userVerificationsQuery, newVerification);
+        addDocumentNonBlocking(userVerificationsCollection, newVerification);
     }
   };
 

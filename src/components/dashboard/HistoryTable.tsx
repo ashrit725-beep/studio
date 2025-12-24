@@ -24,7 +24,6 @@ const statusVariantMap: { [key in VerificationRequest['verificationStatus']]: "d
     'Failed': 'destructive',
     'pending': 'secondary',
     'processing': 'secondary',
-    'completed': 'default',
 }
 
 export default function HistoryTable({ data, isLoading }: HistoryTableProps) {

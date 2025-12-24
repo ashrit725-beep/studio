@@ -12,7 +12,7 @@ export type VerificationRequest = {
   userId: string;
   documentType: string;
   uploadTimestamp: string;
-  verificationStatus: 'pending' | 'processing' | 'completed' | 'Failed' | 'Verified';
+  verificationStatus: 'pending' | 'processing' | 'Failed' | 'Verified';
   authenticityScore: number;
   isReal: boolean;
   documentAiResponse: string;

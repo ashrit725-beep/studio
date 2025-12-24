@@ -63,7 +63,7 @@ export default function SettingsForm() {
         }
     }, [userProfile, profileForm]);
 
-    function onProfileSubmit(values: z.infer<typeof profileFormSchema>) {
+    async function onProfileSubmit(values: z.infer<typeof profileFormSchema>) {
         if (!userDocRef) return;
         setIsSavingProfile(true);
         
@@ -73,10 +73,14 @@ export default function SettingsForm() {
             lastName: lastName.join(' '),
         };
 
-        setDocumentNonBlocking(userDocRef, updatedProfile, { merge: true });
-        
-        toast({ title: "Profile updated successfully!" });
-        setIsSavingProfile(false);
+        try {
+            await setDocumentNonBlocking(userDocRef, updatedProfile, { merge: true });
+            toast({ title: "Profile updated successfully!" });
+        } catch (error: any) {
+            toast({ variant: "destructive", title: "Update failed", description: error.message });
+        } finally {
+            setIsSavingProfile(false);
+        }
     }
     
     async function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
