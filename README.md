@@ -60,25 +60,7 @@ Major players like Onfido and Jumio offer powerful, enterprise-grade identity ve
 
 ## Slide 4 - Introducing AI-NaMo: The Solution
 
-**The Idea**
-
-AI-NaMo is a free, AI-powered identity verification platform designed to make it easy and secure for anyone to verify government-issued ID documents. Our mission is to provide a reliable, accessible tool that helps businesses and organizations of all sizes combat the growing problem of identity fraud.
-
-**How It Solves the Problem**
-
-AI-NaMo directly addresses the shortcomings of manual verification and the high cost of enterprise solutions. It uses advanced AI to analyze documents for authenticity, checking for security features like holograms, watermarks, and font consistency. This provides a fast, automated, and accurate way to confirm if an ID is legitimate, drastically reducing the risk of fraud for users who were previously priced out of the market.
-
-**Features of Interest**
-
-*   **Secure User Authentication**: Safe and secure login for all users.
-*   **AI-Powered Document Verification**: Upload an ID, and our AI will analyze it for authenticity, providing a confidence score and a detailed report.
-*   **Dashboard & History**: A user-friendly dashboard to track all your verifications and review past results.
-*   **Usage Statistics**: See your verification activity over time with clear charts and graphs.
-*   **AI Chatbot**: Get instant help and answers to your questions without leaving the app.
-
-**Why AI-NaMo is Better**
-
-While powerful enterprise solutions exist, they are designed for corporations with large budgets. AI-NaMo provides a powerful, secure, and easy-to-use alternative that is completely free, making reliable identity verification accessible to everyone, from small businesses to non-profits and individual developers.
+AI-NaMo is a free, AI-powered identity verification platform on a mission to democratize security. It gives anyone—from a small business owner to a local event organizer—the power to reliably check government-issued IDs without the enterprise-level cost. By providing a fast, accurate, and easy-to-use tool, we're closing the gap left by expensive corporate solutions and making it simple for everyone to fight identity fraud. This isn't just about catching fakes; it's about building a more trusted and secure community for all.
 
 ## Slide 5 - Introducing the Product
 
