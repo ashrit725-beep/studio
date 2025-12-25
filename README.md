@@ -9,11 +9,7 @@
 
 ### The Problem We're Solving
 
-Fake IDs have gotten dangerously good. Today's technology makes it easy to create convincing forgeries that put businesses and organizations at risk. Traditional manual checks just can't keep up, opening the door to everything from financial fraud to serious security threats.
-
-While powerful verification tools exist, they're built for large corporations and come with a hefty price tag, leaving smaller businesses and organizations vulnerable.
-
-AI-NaMo is here to change that. We're providing a free, simple, and reliable way for anyone to spot a fake ID with confidence.
+Fake IDs have gotten dangerously good, creating huge risks for businesses that still rely on manual checks. While powerful verification tools exist, they're built for large corporations with deep pockets, leaving smaller organizations unprotected and vulnerable to fraud.
 
 ### How We Know This is a Real Problem: Statistics & Sources
 
