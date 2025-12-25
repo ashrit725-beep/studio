@@ -68,7 +68,7 @@ export default function HistoryTable({ data, isLoading }: HistoryTableProps) {
                             <Badge variant={statusVariantMap[item.verificationStatus]}>{item.verificationStatus}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
-                            {item.verificationStatus === 'processing' ? 'N/A' : `${(item.authenticityScore * 100).toFixed(0)}%`}
+                            {item.verificationStatus === 'processing' ? 'N/A' : `${item.authenticityScore.toFixed(0)}%`}
                         </TableCell>
                         </TableRow>
                     ))

@@ -1,7 +1,7 @@
 'use client';
 
 import { TrendingUp } from 'lucide-react';
-import { Bar, BarChart, CartesianGrid, LabelList, Pie, PieChart, Sector, XAxis } from 'recharts';
+import { Bar, BarChart, CartesianGrid, LabelList, Pie, PieChart, Sector, XAxis, YAxis } from 'recharts';
 import {
   Card,
   CardContent,
@@ -24,10 +24,7 @@ import { PieSectorDataItem } from 'recharts/types/polar/Pie';
 const monthlyVerificationsConfig = {
   count: {
     label: 'Verifications',
-  },
-  desktop: {
-    label: 'Verifications',
-    color: 'hsl(var(--primary))',
+    color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
 
@@ -79,17 +76,20 @@ export default function UsageCharts({ verificationData }: UsageChartsProps) {
   }, [verificationData]);
 
   const totalVerifications = useMemo(() => verificationData.length, [verificationData]);
+  const totalVerified = useMemo(() => statusData.find(d => d.status === 'Verified')?.count || 0, [statusData]);
+  const totalFailed = useMemo(() => statusData.find(d => d.status === 'Failed')?.count || 0, [statusData]);
+
 
   const activeSegment = useMemo(() => {
-    if (statusData.length === 0) return { count: 0, status: 'No data' };
+    if (statusData.length === 0) return { count: 0, status: 'No data', fill: 'hsl(var(--muted))' };
     return statusData[activeIndex];
   }, [activeIndex, statusData]);
 
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <Card>
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-5">
+      <Card className="lg:col-span-3">
         <CardHeader>
-          <CardTitle>Monthly Verifications</CardTitle>
+          <CardTitle>Monthly Verification Activity</CardTitle>
           <CardDescription>
             Total verifications conducted over the last 6 months.
           </CardDescription>
@@ -105,14 +105,10 @@ export default function UsageCharts({ verificationData }: UsageChartsProps) {
             >
               <CartesianGrid vertical={false} />
               <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+              <YAxis tickLine={false} axisLine={false} tickMargin={10} />
               <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-              <defs>
-                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8} />
-                  <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1} />
-                </linearGradient>
-              </defs>
-              <Bar dataKey="count" radius={8} fill="url(#fillDesktop)">
+              
+              <Bar dataKey="count" radius={8} fill="hsl(var(--primary))">
                 <LabelList
                   position="top"
                   offset={12}
@@ -124,24 +120,24 @@ export default function UsageCharts({ verificationData }: UsageChartsProps) {
           </ChartContainer>
         </CardContent>
         <CardFooter className="flex-col items-start gap-2 text-sm">
-          <div className="flex gap-2 font-medium leading-none">
-            Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          <div className="flex gap-2 font-medium leading-none text-muted-foreground">
+            <TrendingUp className="h-4 w-4 text-green-500" /> This shows an upward trend in verification activities.
           </div>
           <div className="leading-none text-muted-foreground">
-            Showing total verifications for the last 6 months
+            A consistent increase suggests growing usage and trust in the platform.
           </div>
         </CardFooter>
       </Card>
 
-      <Card>
+      <Card className="lg:col-span-2 flex flex-col">
         <CardHeader>
           <CardTitle>Verification Outcomes</CardTitle>
           <CardDescription>All-time distribution of verification results.</CardDescription>
         </CardHeader>
-        <CardContent className="flex-1 pb-0">
+        <CardContent className="flex flex-1 items-center justify-center pb-0">
           <ChartContainer
             config={statusChartConfig}
-            className="mx-auto aspect-square h-[250px]"
+            className="mx-auto aspect-square max-h-[250px]"
           >
             <PieChart>
               <ChartTooltip content={<ChartTooltipContent hideLabel />} />
@@ -167,18 +163,25 @@ export default function UsageCharts({ verificationData }: UsageChartsProps) {
             </PieChart>
           </ChartContainer>
         </CardContent>
-        <CardFooter className="flex-col gap-2 text-sm">
+        <CardFooter className="flex-col gap-4 text-sm pt-4">
           <div className="flex w-full items-center justify-center gap-2 font-medium leading-none">
             {statusData.length > 0 ? (
-              <>
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: activeSegment?.fill }}
-                />
-                <div className="leading-none">
-                  {activeSegment?.status}: {activeSegment?.count}
+                <>
+                <div
+                    className="flex items-center gap-2"
+                    style={{ color: statusData.find(d => d.status === 'Verified')?.fill }}
+                >
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: statusData.find(d => d.status === 'Verified')?.fill }} />
+                    Verified: {((totalVerified / totalVerifications) * 100).toFixed(0)}%
                 </div>
-              </>
+                <div
+                    className="flex items-center gap-2"
+                    style={{ color: statusData.find(d => d.status === 'Failed')?.fill }}
+                >
+                    <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: statusData.find(d => d.status === 'Failed')?.fill }} />
+                    Failed: {((totalFailed / totalVerifications) * 100).toFixed(0)}%
+                </div>
+                </>
             ) : (
               'No data to display'
             )}
