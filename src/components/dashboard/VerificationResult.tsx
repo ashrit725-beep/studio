@@ -51,7 +51,7 @@ const VerificationResult: React.FC<VerificationResultProps> = ({ result, isLoadi
   }
 
   const { documentType, authenticity } = result;
-  const confidencePercent = Math.round(authenticity.confidenceScore * 100);
+  const confidencePercent = Math.round(authenticity.confidenceScore);
   const isReal = authenticity.isReal;
 
   return (

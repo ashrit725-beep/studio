@@ -25,53 +25,50 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
   const [isCameraActive, setIsCameraActive] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const getCameraPermission = async () => {
-    if (hasCameraPermission === null) {
-      try {
-        await navigator.mediaDevices.getUserMedia({ video: true });
-        setHasCameraPermission(true);
-      } catch (error) {
-        console.error("Error accessing camera:", error);
-        setHasCameraPermission(false);
-        toast({
-          variant: "destructive",
-          title: "Camera Access Denied",
-          description: "Please enable camera permissions in your browser settings.",
-        });
-      }
+    if (hasCameraPermission === false) return; // Don't re-request if already denied
+    if (hasCameraPermission === true) {
+        setIsCameraActive(true);
+        return;
     }
-    if (hasCameraPermission !== false) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      streamRef.current = stream;
+      setHasCameraPermission(true);
       setIsCameraActive(true);
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+      setHasCameraPermission(false);
+      setIsCameraActive(false);
+      toast({
+        variant: "destructive",
+        title: "Camera Access Denied",
+        description: "Please enable camera permissions in your browser settings.",
+      });
     }
   };
+
+  const stopCamera = () => {
+      if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => track.stop());
+          streamRef.current = null;
+      }
+      if(videoRef.current){
+          videoRef.current.srcObject = null;
+      }
+      setIsCameraActive(false);
+  }
   
   useEffect(() => {
-    let stream: MediaStream | null = null;
-    if (isCameraActive && hasCameraPermission) {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then((s) => {
-          stream = s;
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-          }
-        })
-        .catch(err => {
-            console.error("Error starting camera stream:", err);
-            setHasCameraPermission(false);
-            setIsCameraActive(false);
-        });
-    }
-  
     return () => {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
-      }
-    };
-  }, [isCameraActive, hasCameraPermission]);
+        stopCamera();
+    }
+  }, []);
 
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -142,15 +139,16 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
       const context = canvas.getContext('2d');
       if (context) {
         context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+        const dataUrl = canvas.toDataURL('image/jpeg');
         canvas.toBlob(blob => {
           if (blob) {
             const capturedFile = new File([blob], "capture.jpg", { type: "image/jpeg" });
             const previewUrl = URL.createObjectURL(capturedFile);
             setFile(Object.assign(capturedFile, { preview: previewUrl }));
-            setIsCameraActive(false); // Turn off camera after capture
-            analyzeImage(canvas.toDataURL('image/jpeg'));
           }
         }, 'image/jpeg');
+        stopCamera();
+        analyzeImage(dataUrl);
       }
     }
   };
@@ -162,7 +160,7 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
         <CardDescription>Upload or capture a government-issued ID to check its authenticity.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Tabs defaultValue="upload" onValueChange={() => setIsCameraActive(false)}>
+        <Tabs defaultValue="upload" onValueChange={(value) => value === 'upload' && stopCamera()}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="upload">
               <Upload className="mr-2 h-4 w-4" /> Upload File
@@ -203,14 +201,14 @@ const DocumentUploader: React.FC<DocumentUploaderProps> = ({ setAnalysisResult, 
 
               <canvas ref={canvasRef} className="hidden" />
               <Button onClick={captureImage} disabled={!isCameraActive || isLoading} size="lg" className="w-full">
-                <Camera className="mr-2 h-5 w-5" />
-                Capture & Analyze
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Camera className="mr-2 h-5 w-5" />}
+                {isLoading ? "Analyzing..." : "Capture & Analyze"}
               </Button>
             </div>
           </TabsContent>
         </Tabs>
 
-        {file && (
+        {file && !isCameraActive && (
           <div className="space-y-4">
             <div className="flex items-center justify-between rounded-lg border p-2">
               <div className="flex items-center gap-2 overflow-hidden">

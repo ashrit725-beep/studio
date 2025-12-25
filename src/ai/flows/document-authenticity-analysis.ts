@@ -26,7 +26,9 @@ const DocumentAuthenticityAnalysisOutputSchema = z.object({
     isReal: z.boolean().describe('Whether the document is likely real or fake.'),
     confidenceScore: z
       .number()
-      .describe('A score between 0 and 1 indicating the confidence in the authenticity.'),
+      .min(0)
+      .max(100)
+      .describe('A score between 0 and 100 indicating the confidence in the authenticity.'),
     analysisDetails: z.string().describe('A detailed analysis of the document, including checks for holograms, watermarks, and other security features.'),
   }),
 });
@@ -58,8 +60,8 @@ const prompt = ai.definePrompt({
       - **Overall Layout & Spacing**: Compare the layout, spacing of elements, and borders to known templates for that specific document type. Note any deviations.
 
   3.  **Determine Authenticity & Confidence Score**:
-      - Based on the presence and quality of the security features, classify the document by setting the \`isReal\` boolean field to \`true\` for likely authentic or \`false\` for likely fake/altered.
-      - Provide a \`confidenceScore\` from 0.0 (no confidence it's real) to 1.0 (very high confidence it's real). A real document should have a score above 0.8. A document with several missing or flawed features should have a score below 0.5.
+      - Based on your analysis, classify the document by setting the \`isReal\` boolean field. Set it to \`true\` for likely authentic or \`false\` for likely fake/altered.
+      - Provide a \`confidenceScore\` from 0 to 100. This score should be calculated based on your findings. A document with all features passing should be near 100. For each failed or suspicious check, reduce the score. A document with several missing or flawed features should have a score below 50.
 
   4.  **Write Detailed Analysis**:
       - Summarize your findings in the \`analysisDetails\` field.

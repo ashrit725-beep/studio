@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from "react";
-import { collection } from "firebase/firestore";
+import { collection, query, orderBy } from "firebase/firestore";
 import HistoryTable from "@/components/dashboard/HistoryTable";
 import { VerificationRequest } from "@/types";
 import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
@@ -12,7 +12,7 @@ export default function HistoryPage() {
 
     const userHistoryQuery = useMemoFirebase(() => {
         if (!firestore || !user) return null;
-        return collection(firestore, 'users', user.uid, 'verificationRequests');
+        return query(collection(firestore, 'users', user.uid, 'verificationRequests'), orderBy('uploadTimestamp', 'desc'));
     }, [firestore, user]);
 
     const { data: history, isLoading } = useCollection<VerificationRequest>(userHistoryQuery);
