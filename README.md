@@ -34,10 +34,10 @@ The evidence of this problem is overwhelming and well-documented across multiple
     *   *Source*: [SEON Global Identity Fraud Report 2024](https://seon.io/resources/identity-fraud-report/)
 
 *   **Corporate Fraud Insights (with Graphs)**: **PwC's** global survey provides deep insights into how economic crime affects companies worldwide. It features numerous charts on the types of fraud experienced, the financial impact, and industry-specific data.
-    *   *Source*: [PwC Global Economic Crime and Fraud Survey](https://www.pwc.com/fraudsurvey)
+    *   *Source*: [PwC Global Economic Crime and Fraud Survey](https://www.pwc.com/gx/en/services/forensics/economic-crime-survey.html)
 
 *   **Occupational Fraud Data (with Graphs)**: The **Association of Certified Fraud Examiners (ACFE)** publishes a highly-respected report on occupational fraud. It includes detailed charts on how fraud is committed, detected, and the financial losses associated, offering a professional-level view.
-    *   *Source*: [ACFE Report to the Nations](https://www.acfe.com/report-to-the-nations/)
+    *   *Source*: [ACFE Report to the Nations](https://www.acfe.com/report-to-the-nations)
 
 *   **Digital Trust & Safety Trends (with Graphs)**: **Sift’s** quarterly reports are excellent for tracking real-time digital fraud. Their indexes are filled with graphs on payment fraud, account takeovers, and other online threats across their global network.
     *   *Source*: [Sift Digital Trust & Safety Index](https://sift.com/resources/digital-trust-safety-index)
