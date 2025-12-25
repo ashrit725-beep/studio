@@ -1,3 +1,5 @@
+'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -6,32 +8,38 @@ import { CheckCircle, Bot, BarChart2, ShieldCheck } from 'lucide-react';
 import Logo from '@/components/common/Logo';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-const features = [
-  {
-    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
-    title: 'Secure Authentication',
-    description: 'User registration and login with password encryption and secure session management.',
-  },
-  {
-    icon: <CheckCircle className="h-8 w-8 text-primary" />,
-    title: 'AI-Powered Verification',
-    description: 'Utilize Google Cloud Document AI for validation and authenticity scoring.',
-  },
-  {
-    icon: <BarChart2 className="h-8 w-8 text-primary" />,
-    title: 'Verification History',
-    description: 'Display verification results, authenticity scores, and a detailed verification history.',
-  },
-  {
-    icon: <Bot className="h-8 w-8 text-primary" />,
-    title: 'AI Chatbot Assistance',
-    description: 'An AI-powered chatbot provides users with real-time support and guidance.',
-  },
-];
-
-const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image');
-
 export default function Home() {
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
+  const features = [
+    {
+      icon: <ShieldCheck className="h-8 w-8 text-primary" />,
+      title: 'Secure Authentication',
+      description: 'User registration and login with password encryption and secure session management.',
+    },
+    {
+      icon: <CheckCircle className="h-8 w-8 text-primary" />,
+      title: 'AI-Powered Verification',
+      description: 'Utilize Google Cloud Document AI for validation and authenticity scoring.',
+    },
+    {
+      icon: <BarChart2 className="h-8 w-8 text-primary" />,
+      title: 'Verification History',
+      description: 'Display verification results, authenticity scores, and a detailed verification history.',
+    },
+    {
+      icon: <Bot className="h-8 w-8 text-primary" />,
+      title: 'AI Chatbot Assistance',
+      description: 'An AI-powered chatbot provides users with real-time support and guidance.',
+    },
+  ];
+
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-image');
+
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -121,7 +129,7 @@ export default function Home() {
           <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
             <Logo />
             <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-              © {new Date().getFullYear()} AI-NaMo. All rights reserved.
+              © {year} AI-NaMo. All rights reserved.
             </p>
           </div>
         </div>
