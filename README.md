@@ -24,6 +24,15 @@ The evidence of this problem is overwhelming and well-documented across multiple
 *   **Businesses Are Feeling the Impact (with Graphs)**: A staggering **84% of businesses** reported that they were targets of identity fraud in the past year, according to a survey by **Experian**. Their annual report is an excellent resource for charts on fraud trends and business impact.
     *   *Source*: [Experian's 2024 Global Identity and Fraud Report](https://www.experian.com/business/resources/fraud-management/global-identity-and-fraud-report)
 
+*   **The True Cost of Fraud (with Graphs)**: An industry study by **LexisNexis Risk Solutions** breaks down the real cost of fraud. It contains charts illustrating how much each dollar of fraud actually costs businesses when factoring in fees, interest, and merchandise replacement.
+    *   *Source*: [LexisNexis 2023 True Cost of Fraud Study](https://risk.lexisnexis.com/global/en/insights-resources/research/2023-true-cost-of-fraud-study-us-and-canada)
+
+*   **Official Government Data (with Graphs)**: The **Federal Trade Commission (FTC)** is the primary source for U.S. consumer fraud data. Their annual Data Book is filled with charts and tables on identity theft reports, top fraud categories, and financial losses over time.
+    *   *Source*: [FTC Consumer Sentinel Network Data Book 2023](https://www.ftc.gov/reports/consumer-sentinel-network-data-book-2023)
+
+*   **Global Fraud Trends (with Graphs)**: For a global perspective, **SEON's** report offers excellent data visualizations on digital fraud trends, detection rates, and common fraud types across different regions.
+    *   *Source*: [SEON Global Identity Fraud Report 2024](https://seon.io/resources/identity-fraud-report/)
+
 ### Why This Problem Matters: Local, National, and Global Impact
 
 The consequences of identity fraud are felt at every level of society:
