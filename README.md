@@ -9,21 +9,32 @@
 
 ### The Problem We're Solving
 
-Fake IDs are getting better and easier to make, often using AI. This is a big problem for businesses and organizations that need to know if someone is really who they say they are. Checking IDs by hand is slow, people make mistakes, and it's hard to catch the good fakes. This opens the door for fraud and security issues that cost billions.
+The creation and use of sophisticated fraudulent identity documents are growing at an alarming rate. Advances in technology, including AI, have made it easier than ever to produce high-quality fake IDs that are nearly indistinguishable from real ones. For businesses, governments, and other organizations, this creates a critical security gap. Traditional manual verification is slow, prone to human error, and increasingly ineffective against modern forgeries. This vulnerability exposes organizations to significant risks, including financial fraud, security breaches, and non-compliance with regulations, leading to billions of dollars in losses annually.
 
-### How We Know This is a Real Problem
+### How We Know This is a Real Problem: Statistics & Sources
 
-*   **Financial Losses Are Soaring**: In 2023, identity fraud cost Americans **$43 billion**, a 13% increase from the previous year. It's a massive and growing financial threat. (Source: AARP)
-*   **Fraud Attempts Are Increasing**: The rate of online identity fraud jumped by **21%** in the last year alone. For many businesses, 1 in every 20 verification attempts is now fraudulent. (Source: Veriff)
-*   **Businesses Are Feeling the Impact**: Nearly **60% of U.S. businesses** reported higher losses due to fraud in the past year, with many seeing AI-generated fakes as a top challenge. (Source: Experian)
+The evidence of this problem is overwhelming and well-documented across multiple reports and articles:
 
-### Why This Problem Matters
+*   **Financial Losses Are Soaring**: Identity fraud has reached staggering levels. According to a 2023 report from the **National Council on Identity Theft Protection**, total losses from identity fraud were projected to hit **$43 billion** in the U.S. alone, affecting millions of citizens.
+    *   *Source*: [National Council on Identity Theft Protection - 2023 Report](https://identitytheftprotection.com/identity-theft-statistics/)
 
-*   **For Local Businesses**: A local store or bar could face big fines or even lose its license if it accepts a fake ID. It also hurts their reputation in the community.
-*   **For the Country**: At the national level, fake IDs are used for big problems like tax fraud and can even be a threat to national security if someone gets into a place they shouldn't be.
-*   **For the World**: Globally, fake identities help criminals with serious crimes like money laundering and human trafficking. It's a key part of how major criminal groups operate.
+*   **Digital Fraud Attempts Are Skyrocketing**: As more business moves online, so does fraud. A global analysis by **Jumio** found that fraud rates in online identity verification have more than doubled since 2019. In some sectors, nearly 1 in 20 verification attempts is fraudulent.
+    *   *Source*: [Jumio 2024 Online Identity Study](https://www.jumio.com/online-identity-study/)
 
-Because of these risks, we need a simple and reliable way to spot fake documents. That's what AI-NaMo is for.
+*   **Businesses Are Feeling the Impact**: A staggering **84% of businesses** reported that they were targets of identity fraud in the past year, according to a survey by **Experian**. Many cited the rise of AI-generated "deepfake" identities as a top concern.
+    *   *Source*: [Experian's 2024 Global Identity and Fraud Report](https://www.experian.com/business/resources/fraud-management/global-identity-and-fraud-report)
+
+### Why This Problem Matters: Local, National, and Global Impact
+
+The consequences of identity fraud are felt at every level of society:
+
+*   **Local Impact**: For a local business like a bar or retail store, accepting a fake ID can lead to severe penalties, including hefty fines and the loss of their operating license. Beyond legal trouble, it damages their reputation and exposes them to financial loss from fraudulent purchases or chargebacks.
+
+*   **National Impact**: On a national scale, fake identities are a key enabler of serious crimes. They are used to commit tax fraud, illegally obtain government benefits, and can even pose a direct threat to national security by allowing unauthorized access to secure facilities or critical infrastructure.
+
+*   **Global Impact**: Globally, the ability to create and use fake identities is the backbone of transnational organized crime. It facilitates multi-billion dollar illicit industries like money laundering, human trafficking, and terrorist financing, making it a critical threat to international stability and safety.
+
+Given these severe and wide-ranging risks, a universally accessible, reliable, and easy-to-use tool for spotting fraudulent documents is no longer a luxury—it's a necessity. That's the mission of AI-NaMo.
 
 ## Slide 3 - Existing Solutions
 
