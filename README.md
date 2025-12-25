@@ -11,17 +11,17 @@
 
 Fake IDs have gotten dangerously good, creating huge risks for businesses that still rely on manual checks. While powerful verification tools exist, they're built for large corporations with deep pockets, leaving smaller organizations unprotected and vulnerable to fraud.
 
-### How We Know This is a Real Problem: Statistics & Sources
+### How We Know This is a Real Problem: Sources with Graphs & Data
 
-The evidence of this problem is overwhelming and well-documented across multiple reports and articles:
+The evidence of this problem is overwhelming and well-documented across multiple reports and articles that contain valuable data visualizations:
 
 *   **Financial Losses Are Soaring**: Identity fraud has reached staggering levels. According to a 2023 report from the **National Council on Identity Theft Protection**, total losses from identity fraud were projected to hit **$43 billion** in the U.S. alone, affecting millions of citizens.
     *   *Source*: [National Council on Identity Theft Protection - 2023 Report](https://identitytheftprotection.com/identity-theft-statistics/)
 
-*   **Digital Fraud Attempts Are Skyrocketing**: As more business moves online, so does fraud. A global analysis by **Jumio** found that fraud rates in online identity verification have more than doubled since 2019. In some sectors, nearly 1 in 20 verification attempts is fraudulent.
+*   **Digital Fraud Attempts Are Skyrocketing (with Graphs)**: As more business moves online, so does fraud. A global analysis by **Jumio** found that fraud rates in online identity verification have more than doubled since 2019. Their report includes charts showing fraud rates by industry and region.
     *   *Source*: [Jumio 2024 Online Identity Study](https://www.jumio.com/online-identity-study/)
 
-*   **Businesses Are Feeling the Impact**: A staggering **84% of businesses** reported that they were targets of identity fraud in the past year, according to a survey by **Experian**. Many cited the rise of AI-generated "deepfake" identities as a top concern.
+*   **Businesses Are Feeling the Impact (with Graphs)**: A staggering **84% of businesses** reported that they were targets of identity fraud in the past year, according to a survey by **Experian**. Their annual report is an excellent resource for charts on fraud trends and business impact.
     *   *Source*: [Experian's 2024 Global Identity and Fraud Report](https://www.experian.com/business/resources/fraud-management/global-identity-and-fraud-report)
 
 ### Why This Problem Matters: Local, National, and Global Impact
@@ -38,37 +38,37 @@ Given these severe and wide-ranging risks, a universally accessible, reliable, a
 
 ## Slide 3 - Existing Solutions
 
-While several identity verification solutions exist, they often fall short of being accessible and efficient for everyone.
+While several identity verification solutions exist, they often fall short for small to medium-sized businesses and organizations due to high costs and complexity.
 
 **Current Solutions:**
 
-Major players like **Onfido**, **Jumio**, and **Veriff** offer powerful identity verification platforms. They are trusted by large enterprises in finance, tech, and government.
+Major players like **Onfido**, **Jumio**, and **Veriff** offer powerful, enterprise-grade identity verification platforms. They are trusted by large companies in finance, tech, and government sectors to combat fraud and comply with regulations.
 
 **Key Features of Existing Solutions:**
 
-*   **AI-Powered Analysis**: They use AI to analyze government-issued IDs, check for security features, and match the ID photo to a live selfie.
-*   **Liveness Detection**: These platforms can determine if a person is physically present during the verification process to prevent spoofing.
-*   **Global Coverage**: They support a wide range of documents from many different countries.
+*   **AI-Powered Analysis**: They use sophisticated AI to analyze government-issued IDs, cross-reference data points, check for security features, and match the ID photo to a live selfie.
+*   **Liveness Detection**: These platforms can determine if a person is physically present during the verification process using advanced biometrics to prevent spoofing with photos or videos.
+*   **Global Coverage**: They support thousands of document types from over 200 countries and territories.
 
-**Limitations of These Solutions:**
+**The Gap in the Market: Limitations of These Solutions:**
 
-*   **High Cost**: These services are very expensive and are typically priced for large corporations. A small business, a non-profit, or an individual developer often can't afford them.
-*   **Complex Integration**: Setting up these solutions can be complicated, requiring significant technical resources and development time.
-*   **Lack of Transparency**: The pricing models are often not straightforward, and it can be hard to know what you'll actually pay.
+*   **Prohibitive Cost**: These services are extremely expensive, with pricing models based on per-verification fees or large annual contracts, making them inaccessible for small businesses, non-profits, or individual developers.
+*   **Complex Integration**: Implementing these solutions can be a complicated and time-consuming process, often requiring a dedicated engineering team.
+*   **Lack of Transparency**: Pricing is often opaque and requires a sales consultation, creating a barrier for smaller players who need straightforward, accessible tools.
 
 **The Need for a Better Tool:**
 
-There is a clear gap in the market for a solution that is both powerful and accessible. We need a tool that offers reliable, AI-driven identity verification without the high costs and complexity of enterprise-grade platforms. This is where **AI-NaMo** comes in—it provides a free, secure, and easy-to-use alternative for anyone who needs to verify identities with confidence.
+There is a clear and unmet need for a solution that democratizes identity verification. We need a tool that offers reliable, AI-driven security without the high costs and complexity of enterprise-grade platforms. This is where **AI-NaMo** comes in—it provides a free, secure, and easy-to-use alternative for anyone who needs to verify identities with confidence.
 
 ## Slide 4 - Introducing AI-NaMo: The Solution
 
 **The Idea**
 
-AI-NaMo is a free, AI-powered identity verification platform designed to make it easy for anyone to verify government-issued ID documents. Our goal is to provide a secure and reliable tool that helps combat the growing problem of identity fraud.
+AI-NaMo is a free, AI-powered identity verification platform designed to make it easy and secure for anyone to verify government-issued ID documents. Our mission is to provide a reliable, accessible tool that helps businesses and organizations of all sizes combat the growing problem of identity fraud.
 
 **How It Solves the Problem**
 
-AI-NaMo directly addresses the shortcomings of manual verification by using advanced AI to analyze documents. It can spot fake IDs that a person might miss by checking for security features like holograms, watermarks, and font consistency. This provides a fast, automated, and accurate way to confirm if an ID is legitimate, reducing the risk of fraud.
+AI-NaMo directly addresses the shortcomings of manual verification and the high cost of enterprise solutions. It uses advanced AI to analyze documents for authenticity, checking for security features like holograms, watermarks, and font consistency. This provides a fast, automated, and accurate way to confirm if an ID is legitimate, drastically reducing the risk of fraud for users who were previously priced out of the market.
 
 **Features of Interest**
 
@@ -80,7 +80,7 @@ AI-NaMo directly addresses the shortcomings of manual verification by using adva
 
 **Why AI-NaMo is Better**
 
-While powerful enterprise solutions exist, they are often too expensive and complicated for small businesses, non-profits, or individual developers. AI-NaMo provides a powerful, secure, and easy-to-use alternative that is completely free, making reliable identity verification accessible to everyone.
+While powerful enterprise solutions exist, they are designed for corporations with large budgets. AI-NaMo provides a powerful, secure, and easy-to-use alternative that is completely free, making reliable identity verification accessible to everyone, from small businesses to non-profits and individual developers.
 
 ## Slide 6 - Future Scope
 
