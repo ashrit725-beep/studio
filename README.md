@@ -80,6 +80,32 @@ AI-NaMo directly addresses the shortcomings of manual verification and the high 
 
 While powerful enterprise solutions exist, they are designed for corporations with large budgets. AI-NaMo provides a powerful, secure, and easy-to-use alternative that is completely free, making reliable identity verification accessible to everyone, from small businesses to non-profits and individual developers.
 
+## Slide 5 - Introducing the Product
+
+### Details of the Solution
+
+AI-NaMo is a modern web application that provides a complete solution for identity verification. It features a secure user authentication system with email-based two-factor authentication. The core of the platform is the AI-powered document verification tool, which allows users to upload or capture an image of a government ID and receive a detailed authenticity report. The user dashboard provides access to verification history, usage statistics, and account settings, all supported by an integrated AI chatbot for instant help.
+
+### How It Works
+
+The process is designed to be simple and intuitive:
+1.  **Upload/Capture**: A user uploads a photo of an ID document or uses their device's camera to capture one directly within the app.
+2.  **AI Analysis**: The image is securely sent to our backend, where a Google Gemini-powered AI model analyzes it in real-time. The model meticulously checks for security features like holograms, watermarks, microprinting, and font consistency.
+3.  **Receive Results**: Within seconds, the platform returns a comprehensive report, including a clear `real/fake` classification, a confidence score, and a detailed breakdown of the features that passed or failed inspection.
+
+### Elements of Interest (Tech Stack)
+
+AI-NaMo is built on a robust, modern technology stack designed for performance, scalability, and security:
+-   **Frontend Framework**: Next.js (with App Router) & React
+-   **Styling**: Tailwind CSS & shadcn/ui components
+-   **Backend & User Management**: Firebase (Authentication & Firestore)
+-   **Generative AI**: Google's Genkit framework with the Gemini 2.5 Flash model for document analysis and chatbot functionality.
+-   **Deployment**: Hosted on Firebase App Hosting for reliable, scalable performance.
+
+### Performance of the Solution
+
+The platform is engineered for speed and accuracy. The use of server-side components in Next.js ensures fast page loads, while the Gemini model provides near-instantaneous analysis of documents. The AI is trained to detect sophisticated forgeries, delivering a high degree of accuracy with a detailed confidence score, allowing users to make informed decisions quickly. The entire process, from upload to result, is typically completed in under 10 seconds.
+
 ## Slide 6 - Future Scope
 
 Our vision for AI-NaMo extends beyond its initial launch. We have a clear roadmap for deploying, growing, and enhancing the platform to become a leading solution in accessible identity verification.
@@ -131,3 +157,5 @@ npm run dev
 ```
 
 Then, open [http://localhost:9002](http://localhost:9002) with your browser to see the result.
+
+```
