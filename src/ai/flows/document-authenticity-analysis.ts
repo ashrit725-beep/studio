@@ -42,6 +42,7 @@ const prompt = ai.definePrompt({
   name: 'documentAuthenticityAnalysisPrompt',
   input: {schema: DocumentAuthenticityAnalysisInputSchema},
   output: {schema: DocumentAuthenticityAnalysisOutputSchema},
+  model: 'googleai/gemini-2.5-flash',
   prompt: `You are an expert system in document authenticity verification for government-issued IDs, including international documents, similar to Google Document AI. Your task is to meticulously analyze the provided image of an ID document and determine its authenticity with a high degree of accuracy.
 
   Follow these steps precisely:
