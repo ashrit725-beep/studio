@@ -9,7 +9,11 @@
 
 ### The Problem We're Solving
 
-The creation and use of sophisticated fraudulent identity documents are growing at an alarming rate. Advances in technology, including AI, have made it easier than ever to produce high-quality fake IDs that are nearly indistinguishable from real ones. For businesses, governments, and other organizations, this creates a critical security gap. Traditional manual verification is slow, prone to human error, and increasingly ineffective against modern forgeries. This vulnerability exposes organizations to significant risks, including financial fraud, security breaches, and non-compliance with regulations, leading to billions of dollars in losses annually.
+Fake IDs have gotten dangerously good. Today's technology makes it easy to create convincing forgeries that put businesses and organizations at risk. Traditional manual checks just can't keep up, opening the door to everything from financial fraud to serious security threats.
+
+While powerful verification tools exist, they're built for large corporations and come with a hefty price tag, leaving smaller businesses and organizations vulnerable.
+
+AI-NaMo is here to change that. We're providing a free, simple, and reliable way for anyone to spot a fake ID with confidence.
 
 ### How We Know This is a Real Problem: Statistics & Sources
 
