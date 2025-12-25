@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CheckCircle, XCircle, FileQuestion } from "lucide-react";
 import type { DocumentAuthenticityAnalysisOutput } from "@/ai/flows/document-authenticity-analysis";
+import { cn } from "@/lib/utils";
 
 interface VerificationResultProps {
   result: DocumentAuthenticityAnalysisOutput | null;
@@ -68,7 +69,7 @@ const VerificationResult: React.FC<VerificationResultProps> = ({ result, isLoadi
             </div>
             <div className="space-y-1 text-center">
                 <h3 className="text-lg font-semibold">Overall Authenticity</h3>
-                <Badge variant={isReal ? "default" : "destructive"} className="text-base">
+                <Badge variant={isReal ? "success" : "destructive"} className="text-base">
                     {isReal ? (
                     <CheckCircle className="mr-2 h-4 w-4" />
                     ) : (
@@ -84,7 +85,7 @@ const VerificationResult: React.FC<VerificationResultProps> = ({ result, isLoadi
             <span>Confidence Score</span>
             <span>{confidencePercent}%</span>
           </div>
-          <Progress value={confidencePercent} className={isReal ? "" : "[&>div]:bg-destructive"} />
+          <Progress value={confidencePercent} className={cn(isReal ? "[&>div]:bg-green-500" : "[&>div]:bg-destructive")} />
         </div>
 
         <div className="space-y-2">

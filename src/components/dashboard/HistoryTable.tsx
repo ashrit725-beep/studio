@@ -19,8 +19,8 @@ interface HistoryTableProps {
   isLoading?: boolean;
 }
 
-const statusVariantMap: { [key in VerificationRequest['verificationStatus']]: "default" | "destructive" | "secondary" } = {
-    'Verified': 'default',
+const statusVariantMap: { [key in VerificationRequest['verificationStatus']]: "default" | "destructive" | "secondary" | "success" } = {
+    'Verified': 'success',
     'Failed': 'destructive',
     'pending': 'secondary',
     'processing': 'secondary',
