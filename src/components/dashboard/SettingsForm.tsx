@@ -73,14 +73,13 @@ export default function SettingsForm() {
             lastName: lastName.join(' '),
         };
 
-        try {
-            await setDocumentNonBlocking(userDocRef, updatedProfile, { merge: true });
+        setDocumentNonBlocking(userDocRef, updatedProfile, { merge: true }).then(() => {
             toast({ title: "Profile updated successfully!" });
-        } catch (error: any) {
+        }).catch((error: any) => {
             toast({ variant: "destructive", title: "Update failed", description: error.message });
-        } finally {
+        }).finally(() => {
             setIsSavingProfile(false);
-        }
+        });
     }
     
     async function onPasswordSubmit(values: z.infer<typeof passwordFormSchema>) {
@@ -98,7 +97,11 @@ export default function SettingsForm() {
             toast({ title: "Password changed successfully!" });
             passwordForm.reset();
         } catch (error: any) {
-             toast({ variant: "destructive", title: "Password change failed", description: error.message });
+             if (error.code === 'auth/invalid-credential') {
+                toast({ variant: "destructive", title: "Password Change Failed", description: "The current password you entered is incorrect. Please try again." });
+             } else {
+                toast({ variant: "destructive", title: "Password change failed", description: error.message });
+             }
         } finally {
             setIsSavingPassword(false);
         }
@@ -153,7 +156,7 @@ export default function SettingsForm() {
         <CardHeader>
           <CardTitle>Change Password</CardTitle>
           <CardDescription>Update your password for better security.</CardDescription>
-        </CardHeader>
+        </-CardHeader>
         <CardContent>
           <Form {...passwordForm}>
             <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
