@@ -20,6 +20,7 @@ import { useAuth, useUser, useDoc, useFirestore, useMemoFirebase } from "@/fireb
 import { signOut } from "firebase/auth"
 import { useToast } from "@/hooks/use-toast"
 import { doc } from "firebase/firestore"
+import { UserProfile } from "@/types"
 
 export function UserNav() {
   const router = useRouter();
@@ -33,7 +34,7 @@ export function UserNav() {
     return doc(firestore, 'users', user.uid);
   }, [firestore, user]);
 
-  const { data: userProfile } = useDoc<{firstName: string, lastName: string}>(userDocRef);
+  const { data: userProfile } = useDoc<UserProfile>(userDocRef);
 
   const handleLogout = async () => {
     try {
@@ -53,8 +54,8 @@ export function UserNav() {
     }
   };
 
-  const displayName = userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : user?.email;
-
+  const displayName = userProfile ? `${userProfile.firstName} ${userProfile.lastName}`.trim() : user?.email;
+  const Fallback = displayName?.[0]?.toUpperCase() ?? 'U';
 
   return (
     <DropdownMenu>
@@ -62,7 +63,7 @@ export function UserNav() {
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user?.photoURL || ""} alt="User avatar" />
-            <AvatarFallback>{displayName?.[0].toUpperCase() || 'U'}</AvatarFallback>
+            <AvatarFallback>{Fallback}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

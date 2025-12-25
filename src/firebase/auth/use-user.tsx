@@ -2,14 +2,14 @@
     
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { useAuth } from '@/firebase/provider'; // Ensure this path is correct
+import { useAuth } from '@/firebase/provider';
 
 /**
  * Interface for the return value of the useUser hook.
  */
 export interface UseUserResult {
   user: User | null;
-  isLoading: boolean;
+  isUserLoading: boolean;
   error: Error | null;
 }
 
@@ -19,18 +19,24 @@ export interface UseUserResult {
  * @returns {UseUserResult} Object with user, isLoading, and error state.
  */
 export function useUser(): UseUserResult {
-  const auth = useAuth(); // Get auth instance from context
-  const [user, setUser] = useState<User | null>(auth.currentUser);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const auth = useAuth(); 
+  const [user, setUser] = useState<User | null>(auth?.currentUser || null);
+  const [isUserLoading, setIsLoading] = useState<boolean>(!auth?.currentUser);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // If there's no auth instance, we can't determine the user.
     if (!auth) {
       setIsLoading(false);
       setUser(null);
-      // Optional: setError(new Error("Firebase Auth not initialized."));
       return;
+    }
+    
+    // Set initial state based on current user if available
+    if(auth.currentUser) {
+        setUser(auth.currentUser);
+        setIsLoading(false);
+    } else {
+        setIsLoading(true);
     }
 
     const unsubscribe = onAuthStateChanged(
@@ -48,7 +54,7 @@ export function useUser(): UseUserResult {
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, [auth]); // Rerun effect if the auth instance changes
+  }, [auth]);
 
-  return { user, isLoading, error };
+  return { user, isUserLoading: isUserLoading, error };
 }

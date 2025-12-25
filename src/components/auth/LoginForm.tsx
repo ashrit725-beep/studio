@@ -49,17 +49,20 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       await signInWithEmailAndPassword(auth, values.email, values.password);
-      toast({
-        title: "Login Successful",
-        description: "Welcome back! Redirecting you to the dashboard.",
-      });
+      // No need to show a toast here, the layout will handle the redirect and loading state.
       router.push("/dashboard");
     } catch (error: any) {
       console.error("Login failed:", error);
+      let errorMessage = "An unknown error occurred.";
+      if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else {
+        errorMessage = error.message;
+      }
       toast({
         variant: "destructive",
         title: "Login Failed",
-        description: error.message || "An unknown error occurred.",
+        description: errorMessage,
       });
       setIsLoading(false);
     }

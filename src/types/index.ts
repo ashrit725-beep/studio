@@ -1,3 +1,11 @@
+export type UserProfile = {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    registrationDate: string;
+};
+
 export type VerificationHistoryItem = {
   id: string;
   documentType: string;

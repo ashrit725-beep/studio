@@ -22,6 +22,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { verifyCode } from "@/actions/auth";
 import { useAuth, useFirestore, setDocumentNonBlocking } from "@/firebase";
+import { UserProfile } from "@/types";
 
 const formSchema = z.object({
   code: z.string().length(6, { message: "Verification code must be 6 digits." }),
@@ -72,18 +73,18 @@ export default function VerifyForm() {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        const [firstName, ...lastName] = name.split(' ');
+        const [firstName, ...lastNameParts] = name.split(' ');
         
-        const userProfile = {
+        const userProfile: UserProfile = {
           id: user.uid,
-          email: user.email,
-          firstName: firstName,
-          lastName: lastName.join(' '),
+          email: user.email!,
+          firstName: firstName || "",
+          lastName: lastNameParts.join(' '),
           registrationDate: new Date().toISOString(),
         };
 
         const userDocRef = doc(firestore, "users", user.uid);
-        setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
+        await setDocumentNonBlocking(userDocRef, userProfile, { merge: true });
 
         // Clear session storage
         sessionStorage.removeItem('signup_email');
@@ -91,7 +92,7 @@ export default function VerifyForm() {
         sessionStorage.removeItem('signup_password');
 
         toast({
-          title: "Account Verified & Logged In!",
+          title: "Account Created!",
           description: "Welcome! Redirecting you to the dashboard.",
         });
         router.push("/dashboard");
